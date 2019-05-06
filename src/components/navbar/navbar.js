@@ -7,7 +7,7 @@ export default class navbar extends Component {
   render() {
     return (
       <div>
-        <Navbar fluid collapseOnSelect>
+        <Navbar bg = "primary" variant = "dark">
         <Navbar.Header>
           <Navbar.Brand>
             <Link to="/">Food Trader</Link>
