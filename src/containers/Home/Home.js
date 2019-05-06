@@ -23,8 +23,8 @@ export default class Home extends Component {
           alignItems="center"
         > 
 
-          <Button variant="contained" className = "button-home" href = "/signup">Registrarse</Button>
-          <Button variant="contained" className = "button-home" href = "/home">Iniciar sesión</Button>
+          <Button variant="contained" className = "button-home" href = "/home">Registrarse</Button>
+          <Button variant="contained" className = "button-home" href = "/login">Iniciar sesión</Button>
           
         
         </Grid>

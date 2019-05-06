@@ -14,6 +14,7 @@ export default class navbar extends Component {
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
+        
       </Navbar>
       </div>
     );
