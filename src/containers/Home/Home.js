@@ -22,7 +22,7 @@ export default class Home extends Component {
           direction="column"
           justify="center"
           alignItems="center"> 
-            <Button variant="contained" className = "button-home" href = "/home">Registrarse</Button>
+            <Button variant="contained" className = "button-home" href = "/register">Registrarse</Button>
             <Button variant="contained" className = "button-home" href = "/login">Iniciar sesión</Button>
         </Grid>
       </div>

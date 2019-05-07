@@ -10,8 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import fetch from 'node-fetch';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import "./Login.css";
+import Add from '@material-ui/icons/Add';
+import "./Register.css";
 
 
 const styles = theme => ({
@@ -52,30 +52,39 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            name: '',
+            address: '',
+            email: '',
+            isOrganization: '',
         }
         this.postUser = this.postUser.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        console.log(props)
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleAddressChange = this.handleAddressChange.bind(this);
+        this.handleEmailChange = this.handleEmailChange.bind(this);
     }
 
     async postUser(){
-      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/auth/';
-      const data = {'username': this.state.username, 'password': this.state.password};
+        const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/';
+        const data = {'username': this.state.username, 'password': this.state.password, 'name': this.state.name, 'address': this.state.address
+    , 'email':this.state.email, 'isOrganization': false};
 
-      fetch(url, {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'mode': 'no-cors',
-          },
-          body: JSON.stringify(data)
-          })
-          .then(response => response.json())
-          .then(data => console.log(data))
-  
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'mode': 'no-cors',
+            },
+            body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+
+
   }
+
 
     handleUsernameChange(e) {
         this.setState({username: e.target.value})
@@ -85,27 +94,57 @@ class Login extends Component {
         this.setState({password: e.target.value})
     }
 
+    handleNameChange(e) {
+        this.setState({name: e.target.value})
+    }
+
+    handleAddressChange(e) {
+        this.setState({address: e.target.value})
+    }
+
+    handleEmailChange(e) {
+        this.setState({email: e.target.value})
+    }
+
   render() {
   return (
     <main className={this.props.classes.main} >
       <CssBaseline />
       <Paper className = {this.props.classes.paper}>
         <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
-        <LockOutlinedIcon />
+        <Add />
       
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          Sign up
         </Typography>
+        
         <form className = {this.props.classes.form}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="username">Username</InputLabel>
+            <InputLabel htmlFor="username">Nombre de usuario</InputLabel>
             <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">Contraseña</InputLabel>
             <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
           </FormControl>
+
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="name">Nombre completo</InputLabel>
+            <Input name="name" id="name" onChange={this.handleNameChange} autoComplete="current-name" />
+          </FormControl>
+
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="address">Comuna</InputLabel>
+            <Input name="address" id="address" onChange={this.handleAddressChange} autoComplete="current-name" />
+          </FormControl>
+
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="email">Correo</InputLabel>
+            <Input name="email" id="email" onChange={this.handleEmailChange} autoComplete="current-name" />
+          </FormControl>
+        
+          
    
           <Button
             fullWidth
@@ -116,7 +155,7 @@ class Login extends Component {
             
             
           >
-            Iniciar sesión
+            Registrarse
           </Button>
   
    
