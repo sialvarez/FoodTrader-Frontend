@@ -24,6 +24,7 @@ const styles = theme => ({
       display: 'block', // Fix IE 11 issue.
       marginLeft: theme.spacing.unit * 3,
       marginRight: theme.spacing.unit * 3,
+      
       [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
         width: 400,
         marginLeft: 'auto',
@@ -35,7 +36,9 @@ const styles = theme => ({
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  
     },
     avatar: {
       margin: theme.spacing.unit,
@@ -44,6 +47,7 @@ const styles = theme => ({
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing.unit,
+      
     },
     submit: {
       marginTop: theme.spacing.unit * 3,
@@ -105,49 +109,46 @@ class Login extends Component {
     }
 
   render() {
-    const { redirect } = this.state;
-    if (redirect) {
-      return <Redirect to='/home'/>;
-    }
-    return (
-      <main className={this.props.classes.main} >
-        <CssBaseline />
-        <Paper className = {this.props.classes.paper}>
-          <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
-          <LockOutlinedIcon />
-        
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Iniciar sesión en FoodTrader App
-          </Typography>
-          <form className = {this.props.classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="username">Usuario</InputLabel>
-              <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Contraseña</InputLabel>
-              <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
-            </FormControl>
-     
-            <Button
-              fullWidth
-              variant="contained"
-              color= "primary"
-              className = {[this.props.classes.submit, "button-login"].join(' ')}
-              onClick = {this.postUser}
-              
-              
-            >
-              Iniciar Sesión
-            </Button>
-    
-     
-          </form>
-        </Paper>
-      </main>
-    );
-  }
+  return (
+    <main className={this.props.classes.main} >
+      <CssBaseline />
+      <Paper className = {this.props.classes.paper}>
+        <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
+        <LockOutlinedIcon />
+      
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          
+        </Typography>
+        <form className = {this.props.classes.form}>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
+            <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
+            <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
+          </FormControl>
+   
+          <Button
+            fullWidth
+            variant="contained"
+            color= "primary"
+            className = {[this.props.classes.submit, "button-login"].join(' ')}
+            onClick = {this.postUser}
+  
+            
+            
+          >
+            Iniciar sesión
+          </Button>
+  
+   
+        </form>
+      </Paper>
+    </main>
+  );
+}
 }
 
 Login.propTypes = {

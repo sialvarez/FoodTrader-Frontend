@@ -5,11 +5,13 @@ import NotFound from "./containers/NotFound/NotFound.js";
 import Dashboard from "./containers/Dashboard/Dashboard.js";
 import Login from "./containers/Auth/Login/Login.js";
 import Register from "./containers/Auth/Register/Register.jsx"
+import FormPublications from "./containers/Publications/Form/Form.jsx"
 
 export default () =>
   <Switch>  
     <Route path="/" exact component={Home} />
     <Route path = "/login" component = {Login} />
+    <Route path = "/publications/new" component = {FormPublications} />
     <Route path = "/register" component = {Register} />
     <Route path= "/home" exact component = {Dashboard} /> 
     <Route component = {NotFound}/>
