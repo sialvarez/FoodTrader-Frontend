@@ -115,18 +115,18 @@ class Login extends Component {
       <Paper className = {this.props.classes.paper}>
         <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
         <LockOutlinedIcon />
-      
+
         </Avatar>
         <Typography component="h1" variant="h5">
-          
+          Sesión
         </Typography>
         <form className = {this.props.classes.form}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
+            <InputLabel className = 'label-input' htmlFor="username">Nombre de usuario</InputLabel>
             <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
+            <InputLabel  className = 'label-input' htmlFor="password">Contraseña</InputLabel>
             <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
           </FormControl>
    
