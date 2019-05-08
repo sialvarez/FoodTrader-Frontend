@@ -12,6 +12,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import fetch from 'node-fetch';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { loginUser } from '../../../actions';
 import "./Login.css";
 require('dotenv').config();
@@ -55,11 +56,12 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            redirect: false,
         }
         this.postUser = this.postUser.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        console.log(props)
+        this.handlePostUser = this.handlePostUser.bind(this);
     }
 
     async postUser(){
@@ -91,6 +93,7 @@ class Login extends Component {
       console.log(data)
       if (true) {
         this.saveUser(data.token)
+        this.setState({ redirect: true })
       }
     }
 
@@ -102,45 +105,49 @@ class Login extends Component {
     }
 
   render() {
-  return (
-    <main className={this.props.classes.main} >
-      <CssBaseline />
-      <Paper className = {this.props.classes.paper}>
-        <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
-        <LockOutlinedIcon />
-      
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Iniciar sesión en FoodTrader App
-        </Typography>
-        <form className = {this.props.classes.form}>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="username">Usuario</InputLabel>
-            <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Contraseña</InputLabel>
-            <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
-          </FormControl>
-   
-          <Button
-            fullWidth
-            variant="contained"
-            color= "primary"
-            className = {[this.props.classes.submit, "button-login"].join(' ')}
-            onClick = {this.postUser}
-            
-            
-          >
-            Iniciar Sesión
-          </Button>
-  
-   
-        </form>
-      </Paper>
-    </main>
-  );
-}
+    const { redirect } = this.state;
+    if (redirect) {
+      return <Redirect to='/home'/>;
+    }
+    return (
+      <main className={this.props.classes.main} >
+        <CssBaseline />
+        <Paper className = {this.props.classes.paper}>
+          <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
+          <LockOutlinedIcon />
+        
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Iniciar sesión en FoodTrader App
+          </Typography>
+          <form className = {this.props.classes.form}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="username">Usuario</InputLabel>
+              <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Contraseña</InputLabel>
+              <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
+            </FormControl>
+     
+            <Button
+              fullWidth
+              variant="contained"
+              color= "primary"
+              className = {[this.props.classes.submit, "button-login"].join(' ')}
+              onClick = {this.postUser}
+              
+              
+            >
+              Iniciar Sesión
+            </Button>
+    
+     
+          </form>
+        </Paper>
+      </main>
+    );
+  }
 }
 
 Login.propTypes = {
