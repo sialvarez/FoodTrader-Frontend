@@ -4,6 +4,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';  
 import Paper from '@material-ui/core/Paper';
@@ -12,9 +14,17 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import fetch from 'node-fetch';
 import Add from '@material-ui/icons/Add';
 import "./Register.css";
-
+import Checkbox from '@material-ui/core/Checkbox';
+import red from '@material-ui/core/colors/red';
 
 const styles = theme => ({
+  root: {
+    color: red[700],
+    '&$checked': {
+      color: red[600],
+    },
+  },
+  checked: {},
     main: {
       width: 'auto',
       display: 'block', // Fix IE 11 issue.
@@ -55,7 +65,7 @@ class Login extends Component {
             name: '',
             address: '',
             email: '',
-            isOrganization: '',
+            isOrganization: false,
         }
         this.postUser = this.postUser.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -63,6 +73,7 @@ class Login extends Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     async postUser(){
@@ -106,7 +117,12 @@ class Login extends Component {
         this.setState({email: e.target.value})
     }
 
+    handleChange = name => event => {
+      this.setState({ [name]: event.target.checked });
+    };
+
   render() {
+    const { classes } = this.props;
   return (
     <main className={this.props.classes.main} >
       <CssBaseline />
@@ -116,35 +132,54 @@ class Login extends Component {
       
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Registro
         </Typography>
         
         <form className = {this.props.classes.form}>
+       
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="username">Nombre de usuario</InputLabel>
-            <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
+            <InputLabel className = 'label-input' htmlFor="username">Nombre de usuario</InputLabel>
+            <Input id="username" name="username" onChange={this.handleUsernameChange}  />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Contraseña</InputLabel>
-            <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
+            <InputLabel className = 'label-input' htmlFor="password">Contraseña</InputLabel>
+            <Input name="password" type="password" id="password" onChange={this.handlePasswordChange}  />
           </FormControl>
-
+      
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="name">Nombre completo</InputLabel>
-            <Input name="name" id="name" onChange={this.handleNameChange} autoComplete="current-name" />
-          </FormControl>
-
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="address">Comuna</InputLabel>
-            <Input name="address" id="address" onChange={this.handleAddressChange} autoComplete="current-name" />
+            <InputLabel className = 'label-input' htmlFor="name">Nombre completo</InputLabel>
+            <Input name="name" id="name" onChange={this.handleNameChange}  />
           </FormControl>
 
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Correo</InputLabel>
-            <Input name="email" id="email" onChange={this.handleEmailChange} autoComplete="current-name" />
+            <InputLabel className = 'label-input' htmlFor="address">Comuna</InputLabel>
+            <Input name="address" id="address" onChange={this.handleAddressChange}  />
           </FormControl>
-        
+
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel className = 'label-input' htmlFor="email">Correo</InputLabel>
+            <Input name="email" id="email" onChange={this.handleEmailChange}  />
+          </FormControl>
+
+          <FormControlLabel
           
+          control={
+            <Checkbox
+              checked={this.state.isOrganization}
+              onChange={this.handleChange('isOrganization')}
+              value="isOrganization"
+              color="secondary"
+              classes={{
+                root: classes.root,
+                checked: classes.checked,
+              }}
+            />
+          }
+          label="Es organización"
+          className = 'label-input'
+        />
+
+         
    
           <Button
             fullWidth

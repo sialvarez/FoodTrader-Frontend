@@ -20,6 +20,7 @@ const styles = theme => ({
       display: 'block', // Fix IE 11 issue.
       marginLeft: theme.spacing.unit * 3,
       marginRight: theme.spacing.unit * 3,
+      
       [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
         width: 400,
         marginLeft: 'auto',
@@ -31,7 +32,9 @@ const styles = theme => ({
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  
     },
     avatar: {
       margin: theme.spacing.unit,
@@ -40,6 +43,7 @@ const styles = theme => ({
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing.unit,
+      
     },
     submit: {
       marginTop: theme.spacing.unit * 3,
@@ -95,15 +99,15 @@ class Login extends Component {
       
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          
         </Typography>
         <form className = {this.props.classes.form}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="username">Username</InputLabel>
+            <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
             <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
             <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
           </FormControl>
    
@@ -113,6 +117,7 @@ class Login extends Component {
             color= "primary"
             className = {[this.props.classes.submit, "button-login"].join(' ')}
             onClick = {this.postUser}
+  
             
             
           >
