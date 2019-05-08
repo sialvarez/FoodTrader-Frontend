@@ -45,20 +45,16 @@ class Home extends Component {
           container
           direction="column"
           justify="center"
-          alignItems="center"
-        > 
-
-          <Button variant="contained" className = "button-home" href = "/signup">Registrarse</Button>
-          <Button variant="contained" className = "button-home" href = "/home">Iniciar sesión</Button>
-          
-        
+          alignItems="center"> 
+            <Button variant="contained" className = "button-home" href = "/register">Registrarse</Button>
+            <Button variant="contained" className = "button-home" href = "/login">Iniciar sesión</Button>
         </Grid>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state = { text: '' }) => {
+const mapStateToProps = (state) => {
   const { text } = state.tests;
   return { text };
 };
