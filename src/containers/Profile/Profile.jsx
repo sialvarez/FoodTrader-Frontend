@@ -11,6 +11,12 @@ import avatar from '../../assets/img/avatar.jpg'
 import Typography from '@material-ui/core/Typography';
 import MyCard from '../../components/card/reviews/card.jsx';
 import PublicationCard from '../../components/card/publications/card.jsx';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { loginUser } from '../../actions';
+import Edit from '@material-ui/icons/Edit';
+import { Redirect } from 'react-router-dom';
 
 
 const styles = theme => ({
@@ -32,49 +38,62 @@ const styles = theme => ({
 			marginBottom: 10,
 			height: 80,
 			width: 80,
-
-			
-      
-    },
+		},
+		button: {
+			margin: theme.spacing.unit,
+		},
+		rightIcon: {
+			marginLeft: theme.spacing.unit,
+		},
+		iconSmall: {
+			fontSize: 10,
+		},
   });
   
 
 class UserProfile extends Component {
 
+
   render()
   {
-    
+	const { user } = this.props;
 	const { classes } = this.props;
+
+	if(Object.keys(user).length === 0){
+		return <Redirect to='/login' />
+	}
+
+
 	return(
     <div className={classes.root}>
 			<Navbar />
 			<CssBaseline />
-				<Grid container spacing={6}>
+				<Grid container spacing={8}>
 					
 					<Grid item sm={3}>
 							<Paper className={classes.paper}>
 								<Avatar alt="avatar" src={avatar} className={classes.avatar} />
 								<Typography className = "title-name" variant="h5">
-									Sebibi
+									{user.username}
 								</Typography>
 
 								<Typography className = "title-profile" variant="h3">
 									¡53kg salvados!
 								</Typography>
 
-								<Grid container spacing = {6}>
+								<Grid container spacing = {8}>
 									<Grid item sm = {6}>
 										<Typography className = "title-name" variant = "h6">
 											Comuna
 										</Typography>
-										<p>Puente Alto</p>
+										<p>{user.address}</p>
 									
 									</Grid>
 									<Grid item sm = {6}>
 										<Typography className = "title-name" variant = "h6">
 											Correo
 										</Typography>
-										<p>sialvarez@uc.cl</p>
+										<p>{user.email}</p>
 									
 									</Grid>
 
@@ -82,7 +101,7 @@ class UserProfile extends Component {
 										<Typography className = "title-name" variant = "h6">
 											Tipo de cuenta
 										</Typography>
-										<p>Personal</p>
+										<p>{user.isOrganization}</p>
 									
 									</Grid>
 
@@ -90,10 +109,26 @@ class UserProfile extends Component {
 										<Typography className = "title-name" variant = "h6">
 											Nombre
 										</Typography>
-										<p>Sebastián Álvarez</p>
+										<p>{user.name}</p>
 									</Grid>
 								</Grid>
 							</Paper>
+
+							<Grid item sm = {6}>
+
+							<Button variant="contained" color="primary" className={classes.button}>
+								Editar perfil
+								<Edit className={classes.rightIcon} />
+							</Button>
+							</Grid>
+							<Grid item sm = {6}>
+
+							<Button variant="contained" color="secondary" className={classes.button}>
+								Eliminar cuenta
+								
+								<DeleteIcon className={classes.rightIcon} />
+							</Button>
+							</Grid>
 
 					</Grid>
 					<Grid item sm={9}>
@@ -177,4 +212,13 @@ UserProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserProfile);
+const mapStateToProps = (state) => {
+  const { user } = state.login;
+  return { user };
+};
+
+const mapDispatchToProps = {
+  loginDispatch: loginUser,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserProfile));

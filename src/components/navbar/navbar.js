@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -80,10 +81,13 @@ const styles = theme => ({
 });
 
 class navbar extends React.Component {
-  state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      redirectToProfile: false,
+    }
+  }  
+
 
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -97,10 +101,10 @@ class navbar extends React.Component {
   render() {
   
     const { classes } = this.props;
-    
-   
-
-    
+    const { redirectToProfile } = this.state;
+    if (redirectToProfile) {
+      return <Redirect to='/profile'/>;
+    }
 
     return (
       <div className={classes.root}>
@@ -132,7 +136,7 @@ class navbar extends React.Component {
               </IconButton>
               <IconButton
                 color="inherit"
-                href = '/profile' 
+                onClick = {() => this.setState({redirectToProfile: true})} 
               >
                 <AccountCircle />
               </IconButton>
