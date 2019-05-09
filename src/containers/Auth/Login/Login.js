@@ -89,10 +89,12 @@ class Login extends Component {
   }
 
   handlePostUser(data){
-    console.log(data)
-    if (true) {
-      this.saveUser(data.token)
-      this.setState({ redirect: true })
+    console.log(data);
+    if (!data.status) {
+      this.saveUser(data.token);
+      this.setState({ redirect: true });
+    } else {
+      alert(data.message);
     }
   }
 
