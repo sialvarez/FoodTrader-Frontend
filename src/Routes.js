@@ -6,10 +6,12 @@ import Dashboard from "./containers/Dashboard/Dashboard.js";
 import Login from "./containers/Auth/Login/Login.js";
 import Register from "./containers/Auth/Register/Register.jsx"
 import FormPublications from "./containers/Publications/Form/Form.jsx"
+import UserProfile from "./containers/Profile/Profile.jsx";
 
 export default () =>
   <Switch>  
     <Route path="/" exact component={Home} />
+    <Route path = "/profile" component = {UserProfile} />
     <Route path = "/login" component = {Login} />
     <Route path = "/publications/new" component = {FormPublications} />
     <Route path = "/register" component = {Register} />

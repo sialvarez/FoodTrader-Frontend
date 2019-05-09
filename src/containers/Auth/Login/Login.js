@@ -123,11 +123,11 @@ class Login extends Component {
           <form className = {this.props.classes.form}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
-              <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
+              <Input id="username" name="username" onChange={this.handleUsernameChange}  />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
+              <Input name="password" type="password" id="password" onChange={this.handlePasswordChange}  />
             </FormControl>
             <Button
               fullWidth
