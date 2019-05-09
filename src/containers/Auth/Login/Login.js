@@ -89,8 +89,7 @@ class Login extends Component {
   }
 
   handlePostUser(data){
-    console.log(data);
-    if (!data.status) {
+    if (data.token) {
       this.saveUser(data.token);
       this.setState({ redirect: true });
     } else {
@@ -101,8 +100,8 @@ class Login extends Component {
   saveUser(token) {
     const { loginDispatch } = this.props;
     const currentUser = jwt.verify(token, process.env.REACT_APP_WORD_SECRET);
-    const { id, email, isActive, isOrganization, username, password } = currentUser;
-    loginDispatch({ id, email, isActive, isOrganization, username, password });
+    const { id, name, email, isActive, isOrganization, username, password, address } = currentUser;
+    loginDispatch({ id, name, email, isActive, isOrganization, username, password, address });
   }
 
   render() {
@@ -136,6 +135,7 @@ class Login extends Component {
               color= "primary"
               className = {[this.props.classes.submit, "button-login"].join(' ')}
               onClick = {this.postUser}
+              disabled = {!this.state.username || !this.state.password}
             >
               Iniciar sesión
             </Button>
