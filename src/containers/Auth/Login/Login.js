@@ -19,136 +19,129 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const styles = theme => ({
-    main: {
-      width: 'auto',
-      display: 'block', // Fix IE 11 issue.
-      marginLeft: theme.spacing.unit * 3,
-      marginRight: theme.spacing.unit * 3,
-      
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
-    paper: {
-      marginTop: theme.spacing.unit * 8,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-  
-    },
-    avatar: {
-      margin: theme.spacing.unit,
-      backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing.unit,
-      
-    },
-    submit: {
-      marginTop: theme.spacing.unit * 3,
-    },
-  });
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing.unit,
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+  },
+});
   
 class Login extends Component {
-    constructor(props) {
-        super(props); 
-        this.state = {
-            username: '',
-            password: '',
-            redirect: false,
-        }
-        this.postUser = this.postUser.bind(this);
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handlePostUser = this.handlePostUser.bind(this);
+  constructor(props) {
+    super(props); 
+    this.state = {
+      username: '',
+      password: '',
+      redirect: false,
     }
+    this.postUser = this.postUser.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handlePostUser = this.handlePostUser.bind(this);
+  }
 
-    async postUser(){
-      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/auth/';
-      const data = {'username': this.state.username, 'password': this.state.password};
+  async postUser(){
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/auth/';
+    const data = { 'username': this.state.username, 'password': this.state.password };
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => this.handlePostUser(data))
+  }
 
-      fetch(url, {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'mode': 'no-cors',
-          },
-          body: JSON.stringify(data)
-          })
-          .then(response => response.json())
-          .then(data => this.handlePostUser(data))
+  handleUsernameChange(e) {
+    this.setState({ username: e.target.value })
+  }
+
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value })
+  }
+
+  handlePostUser(data){
+    console.log(data)
+    if (true) {
+      this.saveUser(data.token)
+      this.setState({ redirect: true })
     }
+  }
 
-    handleUsernameChange(e) {
-        this.setState({username: e.target.value})
-    }
-
-    handlePasswordChange(e) {
-        this.setState({password: e.target.value})
-    }
-
-    handlePostUser(data){
-      console.log(data)
-      if (true) {
-        this.saveUser(data.token)
-        this.setState({ redirect: true })
-      }
-    }
-
-    saveUser(token) {
-      const { loginDispatch } = this.props;
-      const currentUser = jwt.verify(token, process.env.REACT_APP_WORD_SECRET);
-      const { id, email, isActive, isOrganization, username, password } = currentUser;
-      loginDispatch({ id, email, isActive, isOrganization, username, password });
-    }
+  saveUser(token) {
+    const { loginDispatch } = this.props;
+    const currentUser = jwt.verify(token, process.env.REACT_APP_WORD_SECRET);
+    const { id, email, isActive, isOrganization, username, password } = currentUser;
+    loginDispatch({ id, email, isActive, isOrganization, username, password });
+  }
 
   render() {
-  return (
-    <main className={this.props.classes.main} >
-      <CssBaseline />
-      <Paper className = {this.props.classes.paper}>
-        <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
-        <LockOutlinedIcon />
-      
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          
-        </Typography>
-        <form className = {this.props.classes.form}>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
-            <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
-            <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
-          </FormControl>
-   
-          <Button
-            fullWidth
-            variant="contained"
-            color= "primary"
-            className = {[this.props.classes.submit, "button-login"].join(' ')}
-            onClick = {this.postUser}
-  
-            
-            
-          >
-            Iniciar sesión
-          </Button>
-  
-   
-        </form>
-      </Paper>
-    </main>
-  );
-}
+    const { redirect } = this.state;
+    if (redirect) {
+      return <Redirect to='/home'/>;
+    }
+
+    return (
+      <main className={this.props.classes.main} >
+        <CssBaseline />
+        <Paper className = {this.props.classes.paper}>
+          <Avatar className = {[this.props.classes.avatar, "avatar-login"].join(' ')}>
+          <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Iniciar sesión en FoodTrader
+          </Typography>
+          <form className = {this.props.classes.form}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel className = 'label-input' htmlFor="username">Username</InputLabel>
+              <Input id="username" name="username" onChange={this.handleUsernameChange} autoComplete="username" autoFocus />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel  className = 'label-input' htmlFor="password">Password</InputLabel>
+              <Input name="password" type="password" id="password" onChange={this.handlePasswordChange} autoComplete="current-password" />
+            </FormControl>
+            <Button
+              fullWidth
+              variant="contained"
+              color= "primary"
+              className = {[this.props.classes.submit, "button-login"].join(' ')}
+              onClick = {this.postUser}
+            >
+              Iniciar sesión
+            </Button>
+          </form>
+        </Paper>
+      </main>
+    );
+  }
 }
 
 Login.propTypes = {
