@@ -41,7 +41,16 @@ const styles = theme => ({
   
 
 class PublicationCard extends React.Component {
-  state = { expanded: false };
+  constructor(props){
+    super(props);
+    this.state = {
+      title: props.title,
+      date: props.date,
+      image: props.image,
+      content: props.content,
+
+    }
+  }
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
@@ -59,16 +68,16 @@ class PublicationCard extends React.Component {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Lechuga"
-          subheader="Octubre 25, 2018"
+          title = {this.state.title}
+          subheader = {this.state.date}
         />
         <CardMedia
           className={classes.media}
-          image="https://comefruta.es/wp-content/uploads/lechugaromana.jpg"
+          image={this.state.image}
         />
         <CardContent>
           <Typography component="p">
-            Se comparte una lechuga que está de color medio chistoso. Por favor contactar para coordinar donación.
+            {this.state.content}
           </Typography>
         </CardContent>
        

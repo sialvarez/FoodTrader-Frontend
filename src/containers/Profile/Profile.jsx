@@ -53,15 +53,21 @@ const styles = theme => ({
 
 class UserProfile extends Component {
 
+	constructor(props){
+		super(props);
+		this.state = {
+			data : ["item 1", "item 2","item 3","item 4","item 5","item 6"]
+		}
+	}
 
   render()
   {
 	const { user } = this.props;
 	const { classes } = this.props;
 
-	if(Object.keys(user).length === 0){
+	/*if(Object.keys(user).length === 0){
 		return <Redirect to='/login' />
-	}
+	}*/
 
 
 	return(
@@ -117,7 +123,7 @@ class UserProfile extends Component {
 							<Grid item sm = {6}>
 
 							<Button variant="contained" color="primary" className={classes.button}>
-								Editar perfil
+								Editar perfil  
 								<Edit className={classes.rightIcon} />
 							</Button>
 							</Grid>
@@ -138,30 +144,15 @@ class UserProfile extends Component {
 							</Typography>
 
 							<Grid container>
-								<Grid item sm = {2}>
 
-									<MyCard />
-								</Grid>
 
-								<Grid item sm = {2}>
-								<MyCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<MyCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<MyCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<MyCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-									<MyCard />
-								</Grid>
+							{this.state.data.map(function(item){
+									return(
+										<Grid item sm = {2}>
+											<MyCard />
+										</Grid>
+									)
+								})}
 								
 
 							</Grid>
@@ -171,31 +162,14 @@ class UserProfile extends Component {
 							</Typography>
 
 							<Grid container>
-								<Grid item sm = {2}>
-									<PublicationCard />
-								</Grid>
 
-								<Grid item sm = {2}>
-								<PublicationCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<PublicationCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<PublicationCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<PublicationCard />
-								</Grid>
-
-								<Grid item sm = {2}>
-								<PublicationCard />	
-								</Grid>
-								
-
+								{this.state.data.map(function(item, i){
+									return(
+										<Grid item sm = {2}>
+											<PublicationCard content = "Test" title = "Test" date = "hoy" image = "https://comefruta.es/wp-content/uploads/lechugaromana.jpg"/>
+										</Grid>
+									)
+								})}
 							</Grid>
 						
 						</Paper>

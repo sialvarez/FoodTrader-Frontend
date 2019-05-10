@@ -101,7 +101,7 @@ class Login extends Component {
     const { loginDispatch } = this.props;
     const currentUser = jwt.verify(token, process.env.REACT_APP_WORD_SECRET);
     const { id, name, email, isActive, isOrganization, username, password, address } = currentUser;
-    loginDispatch({ id, name, email, isActive, isOrganization, username, password, address });
+    loginDispatch({ token, id, name, email, isActive, isOrganization, username, password, address });
   }
 
   render() {

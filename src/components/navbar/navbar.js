@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -85,6 +86,8 @@ class navbar extends React.Component {
     super(props);
     this.state = {
       redirectToProfile: false,
+      redirectToNewPublication: false,
+      redirectToNotification: false,
     }
   }  
 
@@ -102,8 +105,11 @@ class navbar extends React.Component {
   
     const { classes } = this.props;
     const { redirectToProfile } = this.state;
+    const { redirectToNewPublication } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
+    } else if (redirectToNewPublication) {
+      return <Redirect to = '/publications/new'/>;
     }
 
     return (
@@ -128,6 +134,11 @@ class navbar extends React.Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              <IconButton color="inherit" onClick = {() => this.setState({redirectToNewPublication: true})} >
+              
+                    <AddCircleOutline />
+              
+                </IconButton>
               
               <IconButton color="inherit" href = '/notifications'>
                 <Badge badgeContent={0} color="secondary">

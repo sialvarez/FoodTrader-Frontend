@@ -9,9 +9,9 @@ import { Redirect } from 'react-router-dom';
 class Dashboard extends Component {
   render() {
     const { user } = this.props;    
-    if(Object.keys(user).length === 0){
+    /*if(Object.keys(user).length === 0){
       return <Redirect to='/login' />
-    }
+    } */
     
     return (
        
@@ -26,6 +26,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
+  console.log(state);
   return { user };
 };
 

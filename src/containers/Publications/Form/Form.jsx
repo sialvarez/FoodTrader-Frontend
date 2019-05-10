@@ -11,7 +11,9 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import fetch from 'node-fetch';
 import RestaurantOutlined from '@material-ui/icons/RestaurantOutlined';
 import "./Form.css";
-
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { loginUser } from '../../../actions';
 
 
 const styles = theme => ({
@@ -52,15 +54,14 @@ class FormPublications extends Component {
         this.state = {
             content: String,
             title: String,
-            isActive: Boolean,
-            date: String,
             place: String,
-            userId: Number,
-            userName: String,
             image: String,
+            user: this.props.user,
+            redirect: false,
+          
 
         }
-        this.postUser = this.postUser.bind(this);
+        this.postPublication = this.postPublication.bind(this);
         this.handleContentChange = this.handleContentChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
@@ -68,16 +69,18 @@ class FormPublications extends Component {
 
     }
 
-    async postUser(){
-      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/auth/';
-      const data = {'username': this.state.username, 'password': this.state.password};
-
+    async postPublication(){
+      const {token} = this.state.user;
+      const final_token = 'Bearer ' + token;
+      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/';
+      const data = {'content': this.state.content, 'title': this.state.title, 'place': this.state.place, 'image': this.state.image};
       fetch(url, {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
               'mode': 'no-cors',
+              'Authorization': final_token,
           },
           body: JSON.stringify(data)
           })
@@ -103,7 +106,14 @@ class FormPublications extends Component {
     }
 
   render() {
+    if(Object.keys(this.state.user).length === 0){
+      return <Redirect to='/login' />
+    }
+    
+  
   return (
+
+    
     <main className={this.props.classes.main} >
       <CssBaseline />
       <Paper className = {this.props.classes.paper}>
@@ -116,8 +126,7 @@ class FormPublications extends Component {
          
             <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="title">Título</InputLabel>
-                <Input id="title" name="title" onCh
-                ange={this.handleTitleChange} autoComplete="title" />
+                <Input id="title" name="title" onChange = {this.handleTitleChange}/>
             </FormControl>
 
             <FormControl margin="normal" required fullWidth>
@@ -142,7 +151,7 @@ class FormPublications extends Component {
                 variant="contained"
                 color= "primary"
                 className = {[this.props.classes.submit, "button-login"].join(' ')}
-                onClick = {this.postUser}
+                onClick = {this.postPublication}
                 
                 
             >
@@ -162,4 +171,14 @@ FormPublications.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FormPublications);
+const mapStateToProps = (state) => {
+  const { user } = state.login;
+  return { user };
+};
+
+const mapDispatchToProps = {
+  loginDispatch: loginUser,
+};
+
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(FormPublications));
