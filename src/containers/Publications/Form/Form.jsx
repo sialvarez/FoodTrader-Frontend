@@ -66,6 +66,7 @@ class FormPublications extends Component {
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
         this.handleUrlChange = this.handleUrlChange.bind(this);
+        this.handlePostPublication = this.handlePostPublication.bind(this);
 
     }
 
@@ -85,7 +86,7 @@ class FormPublications extends Component {
           body: JSON.stringify(data)
           })
           .then(response => response.json())
-          .then(data => console.log(data))
+          .then(data => this.handlePostPublication(data))
   
   }
 
@@ -105,9 +106,21 @@ class FormPublications extends Component {
       this.setState({url: e.target.value })
     }
 
+    handlePostPublication(data){
+      if (data.publication) {
+        this.setState({ redirect: true });
+      } else {
+        alert(data.message);
+      }
+    }
+
   render() {
     if(Object.keys(this.state.user).length === 0){
       return <Redirect to='/login' />
+    }
+    const { redirect } = this.state;
+    if (redirect) {
+      return <Redirect to='/profile'/>;
     }
     
   

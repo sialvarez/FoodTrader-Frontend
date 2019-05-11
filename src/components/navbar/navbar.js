@@ -13,6 +13,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
+import Home from '@material-ui/icons/Home';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -88,6 +89,7 @@ class navbar extends React.Component {
       redirectToProfile: false,
       redirectToNewPublication: false,
       redirectToNotification: false,
+      redirectToHome: false,
     }
   }  
 
@@ -104,22 +106,26 @@ class navbar extends React.Component {
   render() {
   
     const { classes } = this.props;
-    const { redirectToProfile } = this.state;
+    const { redirectToProfile, redirectToHome } = this.state;
     const { redirectToNewPublication } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {
       return <Redirect to = '/publications/new'/>;
+    } else if (redirectToHome) {
+      return <Redirect to = '/home'/>;
     }
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-           
-            <Typography className={classes.title} variant="h5" color="inherit" noWrap>
-              Food Trader
-            </Typography>
+            <IconButton
+              color="inherit"
+              onClick = {() => this.setState({redirectToHome: true})} 
+            >
+              <Home />
+            </IconButton>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
