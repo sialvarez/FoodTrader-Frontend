@@ -67,7 +67,7 @@ class FormPublications extends Component {
         this.handleContentChange = this.handleContentChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
-        this.handleUrlChange = this.handleUrlChange.bind(this);
+        this.handleImageChange = this.handleImageChange.bind(this);
         this.handlePostPublication = this.handlePostPublication.bind(this);
 
     }
@@ -104,8 +104,8 @@ class FormPublications extends Component {
       this.setState({place: e.target.value})
     }
 
-    handleUrlChange(e) {
-      this.setState({url: e.target.value })
+    handleImageChange(e) {
+      this.setState({image: e.target.value })
     }
 
     handlePostPublication(data){
@@ -158,7 +158,7 @@ class FormPublications extends Component {
 
             <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="image">Url imagen</InputLabel>
-                <Input name="image" id="image" onChange={this.handleUrlChange}/>
+                <Input name="image" id="image" onChange={this.handleImageChange}/>
             </FormControl>
 
             
@@ -169,7 +169,7 @@ class FormPublications extends Component {
                 color= "primary"
                 className = {[this.props.classes.submit, "button-login"].join(' ')}
                 onClick = {this.postPublication}
-                
+                disabled = {!this.state.title || !this.state.place}
                 
             >
                 Publicar
