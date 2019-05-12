@@ -52,6 +52,7 @@ class PublicationCard extends React.Component {
       image: props.image,
       content: props.content,
       user: props.user,
+      place: props.place,
     }
   }
 
@@ -61,7 +62,7 @@ class PublicationCard extends React.Component {
 
   handleOnClick = () => {
     const { handleModal, handleShowedPublication } = this.props;
-    const { title, date, image, content, user } = this.state;
+    const { title, date, image, content, user, place } = this.state;
     handleModal(true);
     handleShowedPublication({
       title,
@@ -69,6 +70,7 @@ class PublicationCard extends React.Component {
       image,
       content,
       user,
+      place,
     });
   }
 

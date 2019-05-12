@@ -6,6 +6,8 @@ import Modal from '@material-ui/core/Modal';
 import PublicationCard from '../../components/card/publications/card.jsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Email from '@material-ui/icons/Email';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { loginUser, handlePublicationModal, showedPublicationAction } from '../../actions';
@@ -30,8 +32,8 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
+  leftIcon: {
+    marginRight: theme.spacing.unit,
   },
   iconSmall: {
     fontSize: 10,
@@ -72,6 +74,7 @@ class Dashboard extends Component {
     })
     .then(response => response.json())
     .then(data => {
+      console.log(data);
       this.setState({publications: data})})
   }
 
@@ -100,6 +103,7 @@ class Dashboard extends Component {
                   <PublicationCard content = {item.publication.content} title = {item.publication.title} 
                   date = {item.publication.createdAt} 
                   image = {item.publication.image}
+                  place = {item.publication.place}
                   user = {item.user.username}
                   handleModal = {handlePublicationModal}
                   handleShowedPublication = {showedPublicationAction}
@@ -123,6 +127,13 @@ class Dashboard extends Component {
             <Typography variant="subtitle1" id="simple-modal-description">
               {showedPublication.content}
             </Typography>
+            <Typography variant="subtitle1" id="simple-modal-description">
+              {showedPublication.place}
+            </Typography>
+            <Button variant="contained" color="primary">
+              <Email className={classes.leftIcon}/>
+              Contactar usuario
+            </Button>
           </div>
         </Modal>
       </div>
