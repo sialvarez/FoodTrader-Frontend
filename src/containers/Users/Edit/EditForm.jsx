@@ -4,7 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-
+import Navbar from "../../../components/navbar/navbar.js";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';  
 import Paper from '@material-ui/core/Paper';
@@ -147,6 +147,8 @@ class EditUser extends Component {
       return <Redirect to='/profile'/>;
     }
     return (
+      <main>
+      <Navbar />
       <main className={this.props.classes.main} >
         <CssBaseline />
         <Paper className = {this.props.classes.paper}>
@@ -201,6 +203,7 @@ class EditUser extends Component {
             </Button>
           </form>
         </Paper>
+      </main>
       </main>
     );
   }
