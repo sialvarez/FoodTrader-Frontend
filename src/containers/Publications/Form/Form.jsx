@@ -8,9 +8,11 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';  
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
 import fetch from 'node-fetch';
 import RestaurantOutlined from '@material-ui/icons/RestaurantOutlined';
 import "./Form.css";
+import Navbar from "../../../components/navbar/navbar.js"
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { loginUser } from '../../../actions';
@@ -125,8 +127,8 @@ class FormPublications extends Component {
     
   
   return (
-
-    
+    <main >
+    <Navbar />
     <main className={this.props.classes.main} >
       <CssBaseline />
       <Paper className = {this.props.classes.paper}>
@@ -134,7 +136,9 @@ class FormPublications extends Component {
         <RestaurantOutlined />
       
         </Avatar>
- 
+          <Typography component="h1" variant="h5">
+            Crear nueva publicación
+          </Typography>
             <form className = {this.props.classes.form}>
          
             <FormControl margin="normal" required fullWidth>
@@ -175,6 +179,7 @@ class FormPublications extends Component {
             </form>
       
       </Paper>
+    </main>
     </main>
   );
 }

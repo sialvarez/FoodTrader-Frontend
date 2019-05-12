@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Navbar from "../../components/navbar/navbar.js"
+import Navbar from "../../components/navbar/navbar.js";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import avatar from '../../assets/img/avatar.jpg'
