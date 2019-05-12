@@ -48,6 +48,7 @@ class PublicationCard extends React.Component {
       date: props.date,
       image: props.image,
       content: props.content,
+      user: props.user,
 
     }
   }
@@ -58,6 +59,7 @@ class PublicationCard extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const subheader = this.state.user + "   " + this.state.date.slice(0,10);
 
     return (
       <Card className={classes.card}>
@@ -69,12 +71,14 @@ class PublicationCard extends React.Component {
             </IconButton>
           }
           title = {this.state.title}
-          subheader = {this.state.date}
+          subheader = {subheader}
         />
         <CardMedia
           className={classes.media}
           image={this.state.image}
         />
+
+        
         <CardContent>
           <Typography component="p">
             {this.state.content}
