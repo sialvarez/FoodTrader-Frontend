@@ -8,7 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { loginUser, handlePublicationModal } from '../../actions';
+import { loginUser, handlePublicationModal, showedPublicationAction } from '../../actions';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -90,7 +90,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { classes, user, handlePublicationModal, publicationModal } = this.props;
+    const { classes, user, handlePublicationModal, publicationModal, showedPublication, showedPublicationAction } = this.props;
     if(Object.keys(user).length === 0){
       return <Redirect to='/login' />
     }
@@ -109,6 +109,7 @@ class Dashboard extends Component {
                   image = {item.publication.image}
                   user = {item.user.username}
                   handleModal = {handlePublicationModal}
+                  handleShowedPublication = {showedPublicationAction}
                   />
                 </Grid>
               )
@@ -123,10 +124,10 @@ class Dashboard extends Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="h6" id="modal-title">
-              Text in a modal
+              {showedPublication.title}
             </Typography>
             <Typography variant="subtitle1" id="simple-modal-description">
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+              {showedPublication.content}
             </Typography>
           </div>
         </Modal>
@@ -138,13 +139,14 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
-  const { publicationModal } = state.modal;
-  return { user, publicationModal };
+  const { publicationModal, showedPublication } = state.modal;
+  return { user, publicationModal, showedPublication };
 };
 
 const mapDispatchToProps = {
   loginDispatch: loginUser,
   handlePublicationModal,
+  showedPublicationAction,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
