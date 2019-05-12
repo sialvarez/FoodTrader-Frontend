@@ -21,6 +21,12 @@ import Edit from '@material-ui/icons/Edit';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 
 const styles = theme => ({
@@ -78,9 +84,14 @@ class UserProfile extends Component {
 			data: ['item 1', 'item 1', 'item 1', 'item 1', 'item 1', 'item 1'],
 			user: props.user,
 			redirectProfile: false,
+			redirectHome: false,
+			open: false,
 		}
 
 		this.getUserPublications = this.getUserPublications.bind(this);
+		this.handleClickOpen = this.handleClickOpen.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	componentDidMount() {
@@ -88,8 +99,38 @@ class UserProfile extends Component {
       this.getUserPublications();
     }
 	}
+
+	handleClickOpen() {
+    this.setState({ open: true });
+  };
+
+  handleClose() {
+    this.setState({ open: false });
+	};
 	
-	async getUserPublications() {
+	handleDelete() {
+		const user_id = this.state.user.id;
+		const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id;
+		const {token} = this.state.user;
+		const final_token = 'Bearer ' + token;
+		fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+			
+			this.setState({open: false, redirectHome: true});
+		})
+		
+  }
+	
+	getUserPublications() {
 		const user_id = this.state.user.id;
     const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/publications';
     const {token} = this.state.user;
@@ -105,12 +146,8 @@ class UserProfile extends Component {
     })
     .then(response => response.json())
     .then(data => {
-			console.log(data);
-			console.log(this.state.user);
       this.setState({publications: data.publications})})
 	}
-	
-	
 
   render() {
 		const { user } = this.props;
@@ -121,6 +158,10 @@ class UserProfile extends Component {
 
 		if (this.state.redirectProfile) {
 			return <Redirect to='/editUser' />
+		}
+
+		if (this.state.redirectHome) {
+			return <Redirect to = '/' />
 		}
 
 		const { publicationModal, showedPublication } = this.props;
@@ -191,11 +232,14 @@ class UserProfile extends Component {
 								</Grid>
 								<Grid item sm = {6}>
 
-								<Button variant="contained" color="secondary" className={classes.button}>
+								<Button variant="contained" onClick={this.handleClickOpen} color="secondary" className={classes.button}>
 									Eliminar cuenta
 									
 									<DeleteIcon className={classes.rightIcon} />
 								</Button>
+
+							
+
 								</Grid>
 
 						</Grid>
@@ -262,6 +306,29 @@ class UserProfile extends Component {
 					</Typography>
 				</div>
 			</Modal>
+
+
+			<Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"¿Seguro que desea eliminar su cuenta?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Considere que tras la eliminación, la información asociada a la cuenta no podrá ser recuperada.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Rechazar
+            </Button>
+            <Button onClick={this.handleDelete} color="primary" autoFocus>
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
 		</div>
 		);
 		}
