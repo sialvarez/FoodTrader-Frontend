@@ -57,18 +57,11 @@ const styles = theme => ({
 		},
   });
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
+  const top = 30;
   return {
     top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    margin:'auto',
   };
 }
 
@@ -207,6 +200,7 @@ class UserProfile extends Component {
       aria-describedby="simple-modal-description"
       open={publicationModal}
       onClose={() => handlePublicationModal(false)}
+      style={{alignItems:'center',justifyContent:'center', display: 'flex'}}
     >
       <div style={getModalStyle()} className={classes.paperModal}>
         <Typography variant="h6" id="modal-title">
