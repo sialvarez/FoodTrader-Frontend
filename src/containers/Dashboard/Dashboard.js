@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import "./Dashboard.css";
 import Navbar from "../../components/navbar/navbar.js"
 import Grid from '@material-ui/core/Grid';
-
+import Modal from '@material-ui/core/Modal';
 import PublicationCard from '../../components/card/publications/card.jsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { loginUser } from '../../actions';
+import { loginUser, handlePublicationModal } from '../../actions';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -19,12 +20,12 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 3,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing.unit * 2,
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
+    position: 'absolute',
+    width: theme.spacing.unit * 50,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
+    outline: 'none',
   },
   button: {
     margin: theme.spacing.unit,
@@ -37,12 +38,26 @@ const styles = theme => ({
   },
 });
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 class Dashboard extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      data : ["item 1", "item 2","item 3","item 4","item 5","item 6", "item 7"],
       user: props.user,
       publications: [],
     }
@@ -64,23 +79,21 @@ class Dashboard extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       this.setState({publications: data})})
   }
 
   componentDidMount() {
-    this.getPublications();
+    const { user } = this.props;
+    if(!(Object.keys(user).length === 0)){
+      this.getPublications();
+    }
   }
 
   render() {
-   
-    const { classes } = this.props;
-    
-    /*if(Object.keys(user).length === 0){
+    const { classes, user, handlePublicationModal, publicationModal } = this.props;
+    if(Object.keys(user).length === 0){
       return <Redirect to='/login' />
-    } */
-
-   
+    }
     return (
       <div className={classes.root}>
         <Navbar />
@@ -95,12 +108,28 @@ class Dashboard extends Component {
                   date = {item.publication.createdAt} 
                   image = {item.publication.image}
                   user = {item.user.username}
+                  handleModal = {handlePublicationModal}
                   />
                 </Grid>
               )
             })}
           </Grid>
         </div>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={publicationModal}
+          onClose={() => handlePublicationModal(false)}
+        >
+          <div style={getModalStyle()} className={classes.paper}>
+            <Typography variant="h6" id="modal-title">
+              Text in a modal
+            </Typography>
+            <Typography variant="subtitle1" id="simple-modal-description">
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+          </div>
+        </Modal>
       </div>
     );
     
@@ -109,11 +138,13 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
-  return { user };
+  const { publicationModal } = state.modal;
+  return { user, publicationModal };
 };
 
 const mapDispatchToProps = {
   loginDispatch: loginUser,
+  handlePublicationModal,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Dashboard));

@@ -49,7 +49,6 @@ class PublicationCard extends React.Component {
       image: props.image,
       content: props.content,
       user: props.user,
-
     }
   }
 
@@ -58,11 +57,11 @@ class PublicationCard extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, handleModal } = this.props;
     const subheader = this.state.user + "   " + this.state.date.slice(0,10);
 
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} onClick={() => handleModal(true)}>
         <CardHeader
          
           action={
