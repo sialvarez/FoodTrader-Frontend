@@ -105,6 +105,7 @@ class Dashboard extends Component {
                   image = {item.publication.image}
                   place = {item.publication.place}
                   user = {item.user.username}
+                  actualUser = {user.username}
                   handleModal = {handlePublicationModal}
                   handleShowedPublication = {showedPublicationAction}
                   />
