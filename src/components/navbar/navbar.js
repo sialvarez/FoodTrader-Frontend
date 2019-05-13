@@ -11,7 +11,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import RecentActors from '@material-ui/icons/RecentActors';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 import Home from '@material-ui/icons/Home';
 import { Redirect } from 'react-router-dom';
@@ -90,6 +90,7 @@ class navbar extends React.Component {
       redirectToNewPublication: false,
       redirectToNotification: false,
       redirectToHome: false,
+      redirectToUsers: false,
     }
   }  
 
@@ -106,14 +107,15 @@ class navbar extends React.Component {
   render() {
   
     const { classes } = this.props;
-    const { redirectToProfile, redirectToHome } = this.state;
-    const { redirectToNewPublication } = this.state;
+    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {
       return <Redirect to = '/publications/new'/>;
     } else if (redirectToHome) {
       return <Redirect to = '/home'/>;
+    } else if (redirectToUsers) {
+      return <Redirect to ='/users' />;
     }
 
     return (
@@ -146,9 +148,9 @@ class navbar extends React.Component {
               
                 </IconButton>
               
-              <IconButton color="inherit" href = '/notifications'>
+              <IconButton color="inherit" onClick = {() => this.setState({redirectToUsers: true})}>
                 <Badge badgeContent={0} color="secondary">
-                  <NotificationsIcon />
+                  <RecentActors />
                 </Badge>
               </IconButton>
               <IconButton

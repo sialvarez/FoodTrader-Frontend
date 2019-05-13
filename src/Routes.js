@@ -8,12 +8,14 @@ import Register from "./containers/Auth/Register/Register.jsx"
 import FormPublications from "./containers/Publications/Form/Form.jsx"
 import UserProfile from "./containers/Users/Profile/Profile.jsx";
 import UserEdit from "./containers/Users/Edit/EditForm.jsx";
+import DisplayUsers from "./containers/Users/Display/Display.jsx";
 
 export default () =>
   <Switch>  
     <Route path="/" exact component={Home} />
     <Route path = "/profile" component = {UserProfile} />
-    <Route path= "/editUser" exact component = {UserEdit} /> 
+    <Route path= "/editUser" component = {UserEdit} /> 
+    <Route path = "/users" component = {DisplayUsers} />
     <Route path = "/login" component = {Login} />
     <Route path = "/publications/new" component = {FormPublications} />
     <Route path = "/register" component = {Register} />
