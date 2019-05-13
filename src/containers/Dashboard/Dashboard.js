@@ -103,6 +103,7 @@ class Dashboard extends Component {
                   <PublicationCard content = {item.publication.content} title = {item.publication.title} 
                   date = {item.publication.createdAt} 
                   image = {item.publication.image}
+                  id = {item.publication.id}
                   place = {item.publication.place}
                   user = {item.user.username}
                   handleModal = {handlePublicationModal}

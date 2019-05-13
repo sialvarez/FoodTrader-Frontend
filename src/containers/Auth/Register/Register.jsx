@@ -107,8 +107,9 @@ class Register extends Component {
     alert(data.message);
     if (data.user) {
       const { loginDispatch } = this.props;
+      const { token } = data;
       const { id, name, email, isActive, isOrganization, username, password, address } = data.user;
-      loginDispatch({ id, email, name, isActive, isOrganization, username, password, address });
+      loginDispatch({ token, id, email, name, isActive, isOrganization, username, password, address });
       this.setState({ redirect: true });
     }
   }

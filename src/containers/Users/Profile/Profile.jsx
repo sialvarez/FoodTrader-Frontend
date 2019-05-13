@@ -151,7 +151,6 @@ class UserProfile extends Component {
 
   render() {
 		const { user } = this.props;
-		console.log(this.state);
   	if(Object.keys(user).length === 0){
 			return <Redirect to='/login' />
 		}

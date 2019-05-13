@@ -16,7 +16,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { loginUser } from '../../../actions';
 import "./EditForm.css";
-import Checkbox from '@material-ui/core/Checkbox';
 import red from '@material-ui/core/colors/red';
 
 const styles = theme => ({
@@ -58,36 +57,32 @@ const styles = theme => ({
   },
 });
   
-class EditUser extends Component {
+class EditPublication extends Component {
   constructor(props) {
     super(props); 
     this.state = {
-      'user': props.user,
-      'username': props.user.username,
-      'name': props.user.name,
-      'address': props.user.address,
-      'email': props.user.email,
-      'isOrganization': props.user.isOrganization,
-      'redirect': false,
+      title: props.publication.title,
+      content: props.publication.content,
+      place: props.publication.place,
+      image: props.publication.image,
+      id: props.publication.id,
+      user: props.user,
+      redirect: false,
     }
-    this.editUser = this.editUser.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleAddressChange = this.handleAddressChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleChangeIsOrganization = this.handleChangeIsOrganization.bind(this);
-    this.editUser = this.editUser.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleContentChange = this.handleContentChange.bind(this);
+    this.handlePlaceChange = this.handlePlaceChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
+    this.editPublication = this.editPublication.bind(this);
   }
 
-  async editUser() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + this.state.user.id + "/";
+  async editPublication() {
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/' + this.state.id + "/";
     const data = {
-      'username': this.state.username,
-      'password': this.state.password,
-      'name': this.state.name,
-      'address': this.state.address,
-      'email':this.state.email,
-      'isOrganization': this.state.isOrganization
+      'content': this.state.content,
+      'title': this.state.title,
+      'place': this.state.place,
+      'image': this.state.image,
     };
   
     const {token} = this.state.user;
@@ -105,48 +100,36 @@ class EditUser extends Component {
     })
     .then(response => response.json())
     .then(data => {
-  
-        this.handlePostUser(data);
+        this.handleEditPublication(data);
     })
   }
 
-  handlePostUser(data) {
+  handleEditPublication(data) {
     alert(data.message);
-    const {token} = this.state.user;
-    if (data.user) {
-      const { loginDispatch } = this.props;
-      const { id, name, email, isActive, isOrganization, username, password, address } = data.user;
-      loginDispatch({ token, id, email, name, isActive, isOrganization, username, password, address });
+    if (data.publication) {
       this.setState({ redirect: true });
     }
   }
 
-  handleUsernameChange(e) {
-    this.setState({username: e.target.value})
+  handleTitleChange(e) {
+    this.setState({title: e.target.value})
   }
 
-  handleNameChange(e) {
-    this.setState({name: e.target.value})
+  handleContentChange(e) {
+    this.setState({content: e.target.value})
   }
 
-  handleAddressChange(e) {
-    this.setState({address: e.target.value})
+  handlePlaceChange(e) {
+    this.setState({place: e.target.value})
   }
 
-  handleEmailChange(e) {
-    this.setState({email: e.target.value})
+  handleImageChange(e) {
+    this.setState({image: e.target.value})
   }
-
-  handleChangeIsOrganization(e) {
-    this.setState({isOrganization: e.target.checked});
-  };
 
   render() {
     const { redirect } = this.state;
-    const { user, classes } = this.props;
-    if(Object.keys(user).length === 0){
-      return <Redirect to='/login' />
-    }
+    const { classes } = this.props;
     if (redirect) {
       return <Redirect to='/profile'/>;
     }
@@ -160,48 +143,36 @@ class EditUser extends Component {
           <Edit />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Editar perfil
+            Editar publicación
           </Typography>
           <form className = {this.props.classes.form}>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel className = 'label-input' htmlFor="username">Nombre de usuario</InputLabel>
-              <Input id="username" value = {this.state.username} name="username" onChange={this.handleUsernameChange}  />
+              <InputLabel className = 'label-input' htmlFor="title">Título</InputLabel>
+              <Input id="title" value = {this.state.title} name="title" onChange={this.handleTitleChange}  />
             </FormControl>
         
             <FormControl margin="normal" required fullWidth>
-              <InputLabel className = 'label-input' htmlFor="name">Nombre completo</InputLabel>
-              <Input name="name" value = {this.state.name} id="name" onChange={this.handleNameChange}  />
+              <InputLabel className = 'label-input' htmlFor="content">Contenido</InputLabel>
+              <Input name="content" value = {this.state.content} id="content" onChange={this.handleContentChange}  />
             </FormControl>
 
             <FormControl margin="normal" required fullWidth>
-              <InputLabel className = 'label-input' htmlFor="address">Comuna</InputLabel>
-              <Input name="address"  value = {this.state.address} id="address" onChange={this.handleAddressChange}  />
+              <InputLabel className = 'label-input' htmlFor="place">Ubicación</InputLabel>
+              <Input name="place"  value = {this.state.place} id="place" onChange={this.handlePlaceChange}  />
             </FormControl>
 
             <FormControl margin="normal" required fullWidth>
-              <InputLabel className = 'label-input' htmlFor="email">Correo</InputLabel>
-              <Input name="email" id="email"  value = {this.state.email} onChange={this.handleEmailChange}  />
+              <InputLabel className = 'label-input' htmlFor="image">Url imagen</InputLabel>
+              <Input name="image" id="image"  value = {this.state.image} onChange={this.handleImageChange}  />
             </FormControl>
 
-            <Checkbox
-              checked={this.state.isOrganization}
-              onChange={this.handleChangeIsOrganization}
-              value="isOrganization"
-              color="secondary"
-             
-              classes={{
-                root: classes.root,
-                checked: classes.checked,
-              }}
-            />
-            <InputLabel className = 'label-input'> Es organización </InputLabel>
             <Button
               fullWidth
               variant="contained"
               color= "primary"
               className = {[this.props.classes.submit, "button-login"].join(' ')}
-              onClick = {this.editUser}
-              disabled = {!this.state.username || !this.state.email || !this.state.name}
+              onClick = {this.editPublication}
+              disabled = {!this.state.title || !this.state.place}
             >
               Guardar cambios
             </Button>
@@ -213,17 +184,18 @@ class EditUser extends Component {
   }
 }
 
-EditUser.propTypes = {
+EditPublication.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
-  return { user };
+  const { publication } = state.publication;
+  return { user, publication };
 };
 
 const mapDispatchToProps = {
   loginDispatch: loginUser,
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(EditUser));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(EditPublication));
