@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
+import { connect } from 'react-redux';
+import { editPublication } from '../../../actions';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -10,7 +11,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-
+import { Redirect } from 'react-router-dom';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const styles = theme => ({
@@ -51,10 +52,12 @@ class PublicationCard extends React.Component {
       date: props.date,
       image: props.image,
       content: props.content,
+      id: props.id,
       user: props.user,
       actualUser: props.actualUser,
       place: props.place,
       anchorEl: null,
+      redirectEditPublication: false,
     }
   }
 
@@ -82,10 +85,31 @@ class PublicationCard extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  handleMenuItemSelection = (e, action) => {
+    e.stopPropagation();
+    this.setState({ anchorEl: null });
+    if (action === 'edit') {
+      const { dispatchEditPublication } = this.props;
+      const { title, content, place, image, id } = this.state;
+      dispatchEditPublication({
+        title,
+        content,
+        place,
+        image,
+        id,
+      });
+      this.setState({ redirectEditPublication: true });
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const subheader = this.state.user + "   " + this.state.date.slice(0,10);
-    const { anchorEl } = this.state;
+    const { anchorEl, redirectEditPublication } = this.state;
+    
+    if(redirectEditPublication){
+      return <Redirect to='/editPublication' />
+    }
 
     return (
       <Card className={classes.card} onClick={this.handleOnClick}>
@@ -105,8 +129,8 @@ class PublicationCard extends React.Component {
                 open={Boolean(anchorEl)}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}>Edit</MenuItem>
-                <MenuItem onClick={this.handleClose}>Delete</MenuItem>
+                <MenuItem onClick={event => this.handleMenuItemSelection(event, 'edit')}>Edit</MenuItem>
+                <MenuItem onClick={event => this.handleMenuItemSelection(event, 'delete')}>Delete</MenuItem>
               </Menu>
             </div>
           }
@@ -135,4 +159,13 @@ PublicationCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PublicationCard);
+const mapStateToProps = (state) => {
+  const { user } = state.login;
+  return { actualUser: user.username };
+};
+
+const mapDispatchToProps = {
+  dispatchEditPublication: editPublication,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PublicationCard));

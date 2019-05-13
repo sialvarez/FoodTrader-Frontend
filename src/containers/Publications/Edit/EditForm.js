@@ -16,7 +16,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { loginUser } from '../../../actions';
 import "./EditForm.css";
-import Checkbox from '@material-ui/core/Checkbox';
 import red from '@material-ui/core/colors/red';
 
 const styles = theme => ({
@@ -62,14 +61,14 @@ class EditPublication extends Component {
   constructor(props) {
     super(props); 
     this.state = {
-      title: props.title,
-      content: props.content,
-      place: props.place,
-      image: props.image,
+      title: props.publication.title,
+      content: props.publication.content,
+      place: props.publication.place,
+      image: props.publication.image,
+      id: props.publication.id,
       user: props.user,
       redirect: false,
     }
-    this.editUser = this.editUser.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handlePlaceChange = this.handlePlaceChange.bind(this);
@@ -78,7 +77,7 @@ class EditPublication extends Component {
   }
 
   async editPublication() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + this.state.user.id + "/";
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/' + this.state.id + "/";
     const data = {
       'content': this.state.content,
       'title': this.state.title,
@@ -107,8 +106,7 @@ class EditPublication extends Component {
 
   handleEditPublication(data) {
     alert(data.message);
-    console.log(data);
-    if (true) {
+    if (data.publication) {
       this.setState({ redirect: true });
     }
   }
@@ -192,7 +190,8 @@ EditPublication.propTypes = {
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
-  return { user };
+  const { publication } = state.publication;
+  return { user, publication };
 };
 
 const mapDispatchToProps = {

@@ -2,3 +2,4 @@ export const WRITE = 'WRITE';
 export const LOGIN = 'LOGIN';
 export const PUBLICATION_MODAL = 'PUBLICATION_MODAL';
 export const SHOWED_PUBLICATION = 'SHOWED_PUBLICATION';
+export const EDIT_PUBLICATION = 'EDIT_PUBLICATION';
