@@ -20,6 +20,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Tooltip from '@material-ui/core/Tooltip';
 import { logoutAction } from '../../actions';
 
 const styles = theme => ({
@@ -85,7 +86,6 @@ const styles = theme => ({
       display: 'flex',
     },
   },
-  
 });
 
 class navbar extends React.Component {
@@ -134,12 +134,14 @@ class navbar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              color="inherit"
-              onClick = {() => this.setState({redirectToHome: true})} 
-            >
-              <Home />
-            </IconButton>
+            <Tooltip title="Home">
+              <IconButton
+                color="inherit"
+                onClick = {() => this.setState({redirectToHome: true})}
+              >
+                <Home />
+              </IconButton>
+            </Tooltip>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -154,29 +156,36 @@ class navbar extends React.Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+            <Tooltip title="New publication">
               <IconButton color="inherit" onClick = {() => this.setState({redirectToNewPublication: true})} >
               
                     <AddCircleOutline />
               
                 </IconButton>
-              
+              </Tooltip>
+              <Tooltip title="All users">
               <IconButton color="inherit" onClick = {() => this.setState({redirectToUsers: true})}>
                 <Badge badgeContent={0} color="secondary">
                   <RecentActors />
                 </Badge>
               </IconButton>
+              </Tooltip>
+              <Tooltip title="Profile">
               <IconButton
                 color="inherit"
                 onClick = {() => this.setState({redirectToProfile: true})} 
               >
                 <AccountCircle />
               </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
               <IconButton
                 color="inherit"
                 onClick = {() => this.setState({logout: true})} 
               >
                 <Clear />
               </IconButton>
+              </Tooltip>
             </div>
           
           </Toolbar>
