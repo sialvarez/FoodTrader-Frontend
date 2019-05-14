@@ -81,7 +81,7 @@ class Register extends Component {
   }
 
   async postUser() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/';
+    const url = 'https://foodtraderbackned.herokuapp.com/users/';
     const data = {
       'username': this.state.username,
       'password': this.state.password,

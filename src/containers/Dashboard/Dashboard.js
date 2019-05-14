@@ -60,7 +60,7 @@ class Dashboard extends Component {
   }
 
   async getPublications() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/';
+    const url = 'https://foodtraderbackned.herokuapp.com/publications/';
     const {token} = this.state.user;
     const final_token = 'Bearer ' + token;
     fetch(url, {

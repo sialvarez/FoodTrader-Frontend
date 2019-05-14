@@ -80,7 +80,7 @@ class EditUser extends Component {
   }
 
   async editUser() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + this.state.user.id + "/";
+    const url = 'https://foodtraderbackned.herokuapp.com/users/' + this.state.user.id + "/";
     const data = {
       'username': this.state.username,
       'password': this.state.password,

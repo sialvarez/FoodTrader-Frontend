@@ -75,7 +75,7 @@ class FormPublications extends Component {
     async postPublication(){
       const {token} = this.state.user;
       const final_token = 'Bearer ' + token;
-      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/';
+      const url = 'https://foodtraderbackned.herokuapp.com/publications/';
       const data = {'content': this.state.content, 'title': this.state.title, 'place': this.state.place, 'image': this.state.image};
       fetch(url, {
           method: 'POST',

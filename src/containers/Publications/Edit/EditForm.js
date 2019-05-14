@@ -77,7 +77,7 @@ class EditPublication extends Component {
   }
 
   async editPublication() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/' + this.state.id + "/";
+    const url = 'https://foodtraderbackned.herokuapp.com/publications/' + this.state.id + "/";
     const data = {
       'content': this.state.content,
       'title': this.state.title,

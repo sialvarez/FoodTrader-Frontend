@@ -50,7 +50,7 @@ class DisplayUsers extends Component {
   }
 
   getUsers() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/';
+    const url = 'https://foodtraderbackned.herokuapp.com/users/';
     const {token} = this.state.user;
 		const final_token = 'Bearer ' + token;
 		fetch(url, {
