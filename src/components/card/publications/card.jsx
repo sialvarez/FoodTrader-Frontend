@@ -70,10 +70,6 @@ class PublicationCard extends React.Component {
       open: false,
       redirectHome: false,
     }
-
-    console.log("constructor");
-    console.log(props);
-
 		this.handleCloseDelete = this.handleCloseDelete.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
   }
@@ -204,7 +200,7 @@ class PublicationCard extends React.Component {
 
       <Dialog
           open={this.state.open}
-          onClose={this.handleClose}
+          onClose={this.handleCloseDelete}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >

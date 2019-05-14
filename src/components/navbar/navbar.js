@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-
+import { connect } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 
@@ -11,10 +11,16 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Clear from '@material-ui/icons/Clear';
 import RecentActors from '@material-ui/icons/RecentActors';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 import Home from '@material-ui/icons/Home';
 import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { logoutAction } from '../../actions';
 
 const styles = theme => ({
   root: {
@@ -91,23 +97,27 @@ class navbar extends React.Component {
       redirectToNotification: false,
       redirectToHome: false,
       redirectToUsers: false,
+      redirectToLogout: false,
+      logout: false,
     }
-  }  
+    this.handleCloseLogout = this.handleCloseLogout.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
 
-
-  handleProfileMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleCloseLogout() {
+    this.setState({ logout: false });
   };
-
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
+  
+  handleLogout() {
+    const { dispatchLogout } = this.props;
+    this.setState({ redirectToLogout: true });
+    dispatchLogout();
+  }
 
   render() {
   
     const { classes } = this.props;
-    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers } = this.state;
+    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {
@@ -116,6 +126,8 @@ class navbar extends React.Component {
       return <Redirect to = '/home'/>;
     } else if (redirectToUsers) {
       return <Redirect to ='/users' />;
+    } else if (redirectToLogout) {
+      return <Redirect to ='/' />;
     }
 
     return (
@@ -159,11 +171,32 @@ class navbar extends React.Component {
               >
                 <AccountCircle />
               </IconButton>
+              <IconButton
+                color="inherit"
+                onClick = {() => this.setState({logout: true})} 
+              >
+                <Clear />
+              </IconButton>
             </div>
           
           </Toolbar>
         </AppBar>
- 
+        <Dialog
+          open={this.state.logout}
+          onClose={this.handleCloseLogout}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"¿Quieres cerrar tu sesión en Food Trader?"}</DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleCloseLogout} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={this.handleLogout} color="primary" autoFocus>
+              Cerrar sesión
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
@@ -173,4 +206,13 @@ navbar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(navbar);
+const mapStateToProps = (state) => {
+  const { user } = state.login;
+  return { user };
+};
+
+const mapDispatchToProps = {
+  dispatchLogout: logoutAction,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(navbar));
