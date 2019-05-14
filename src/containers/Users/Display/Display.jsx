@@ -85,14 +85,13 @@ class DisplayUsers extends Component {
         <Navbar />
         <CssBaseline />
 				<div className={classes.publications}>
-          <h2 className = "title">Bienvenido a Food Trader</h2>
+          <h2 className = "title">Usuarios de Food Trader</h2>
 					<Grid container>
 						{this.state.users.map(function(item, i){
 								return(
 									<Grid item sm = {3} key = {i}>
 										<div>
-											<p> {item.name} </p>
-											<p> {item.address} </p>
+											<p> {item.name} - {item.address}</p>
 										</div>
 
 									</Grid>

@@ -88,7 +88,7 @@ class Dashboard extends Component {
   render() {
     const { classes, user, handlePublicationModal, publicationModal, showedPublication, showedPublicationAction } = this.props;
     if(Object.keys(user).length === 0){
-      return <Redirect to='/login' />
+      return <Redirect to='/' />
     }
     return (
       <div className={classes.root}>
@@ -108,6 +108,7 @@ class Dashboard extends Component {
                   user = {item.user.username}
                   handleModal = {handlePublicationModal}
                   handleShowedPublication = {showedPublicationAction}
+                  token = {user.token}
                   />
                 </Grid>
               )

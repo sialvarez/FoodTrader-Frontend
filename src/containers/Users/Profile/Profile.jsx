@@ -36,35 +36,35 @@ const styles = theme => ({
     paper: {
       padding: theme.spacing.unit * 2,
       textAlign: 'center',
-			color: theme.palette.text.secondary,
-			marginTop: theme.spacing.unit * 2,
-			marginLeft: theme.spacing.unit * 2,
-			marginRight: theme.spacing.unit * 2,
-		},
-		paperModal: {
-			position: 'absolute',
-	    width: theme.spacing.unit * 50,
-	    backgroundColor: theme.palette.background.paper,
-	    boxShadow: theme.shadows[5],
-	    padding: theme.spacing.unit * 4,
-	    outline: 'none',
-		},
-		avatar: {
-			margin: 'auto',
-			marginBottom: 10,
-			height: 80,
-			width: 80,
-		},
-		button: {
-			margin: theme.spacing.unit,
-			display: 'inline-block',
-		},
-		rightIcon: {
-			marginLeft: theme.spacing.unit,
-		},
-		iconSmall: {
-			fontSize: 10,
-		},
+      color: theme.palette.text.secondary,
+      marginTop: theme.spacing.unit * 2,
+      marginLeft: theme.spacing.unit * 2,
+      marginRight: theme.spacing.unit * 2,
+    },
+    paperModal: {
+      position: 'absolute',
+      width: theme.spacing.unit * 50,
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing.unit * 4,
+      outline: 'none',
+    },
+    avatar: {
+      margin: 'auto',
+      marginBottom: 10,
+      height: 80,
+      width: 80,
+    },
+    button: {
+      margin: theme.spacing.unit,
+      display: 'inline-block',
+    },
+    rightIcon: {
+      marginLeft: theme.spacing.unit,
+    },
+    iconSmall: {
+      fontSize: 10,
+    },
   });
 
 function getModalStyle() {
@@ -77,43 +77,43 @@ function getModalStyle() {
 
 class UserProfile extends Component {
 
-	constructor(props){
-		super(props);
-		this.state = {
-			publications : [],
-			data: ['item 1', 'item 1', 'item 1', 'item 1', 'item 1', 'item 1'],
-			user: props.user,
-			redirectProfile: false,
-			redirectHome: false,
-			open: false,
-		}
+  constructor(props){
+    super(props);
+    this.state = {
+      publications : [],
+      data: ['item 1', 'item 1', 'item 1', 'item 1'],
+      user: props.user,
+      redirectProfile: false,
+      redirectHome: false,
+      open: false,
+    }
 
-		this.getUserPublications = this.getUserPublications.bind(this);
-		this.handleClickOpen = this.handleClickOpen.bind(this);
-		this.handleClose = this.handleClose.bind(this);
-		this.handleDelete = this.handleDelete.bind(this);
-	}
+    this.getUserPublications = this.getUserPublications.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
 
-	componentDidMount() {
+  componentDidMount() {
     if(!(Object.keys(this.state.user).length === 0)){
       this.getUserPublications();
     }
-	}
+  }
 
-	handleClickOpen() {
+  handleClickOpen() {
     this.setState({ open: true });
   };
 
   handleClose() {
     this.setState({ open: false });
-	};
-	
-	handleDelete() {
-		const user_id = this.state.user.id;
-		const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id;
-		const {token} = this.state.user;
-		const final_token = 'Bearer ' + token;
-		fetch(url, {
+  };
+  
+  handleDelete() {
+    const user_id = this.state.user.id;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id;
+    const {token} = this.state.user;
+    const final_token = 'Bearer ' + token;
+    fetch(url, {
       method: 'DELETE',
       headers: {
           'Accept': 'application/json',
@@ -124,14 +124,14 @@ class UserProfile extends Component {
     })
     .then(response => response.json())
     .then(data => {
-			
-			this.setState({open: false, redirectHome: true});
-		})
-		
+      
+      this.setState({open: false, redirectHome: true});
+    })
+    
   }
-	
-	getUserPublications() {
-		const user_id = this.state.user.id;
+  
+  getUserPublications() {
+    const user_id = this.state.user.id;
     const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/publications';
     const {token} = this.state.user;
     const final_token = 'Bearer ' + token;
@@ -147,167 +147,169 @@ class UserProfile extends Component {
     .then(response => response.json())
     .then(data => {
       this.setState({publications: data.publications})})
-	}
+  }
 
   render() {
-		const { user } = this.props;
-  	if(Object.keys(user).length === 0){
-			return <Redirect to='/login' />
-		}
+    const { user } = this.props;
+    if(Object.keys(user).length === 0){
+      return <Redirect to='/login' />
+    }
 
-		if (this.state.redirectProfile) {
-			return <Redirect to='/editUser' />
-		}
+    if (this.state.redirectProfile) {
+      return <Redirect to='/editUser' />
+    }
 
-		if (this.state.redirectHome) {
-			return <Redirect to = '/' />
-		}
+    if (this.state.redirectHome) {
+      return <Redirect to = '/' />
+    }
 
-		const { publicationModal, showedPublication } = this.props;
-		const { classes, handlePublicationModal, showedPublicationAction } = this.props;
+    const { publicationModal, showedPublication } = this.props;
+    const { classes, handlePublicationModal, showedPublicationAction } = this.props;
 
-		return(
-			<div className={classes.root}>
-				<Navbar />
-				<CssBaseline />
-					<Grid container spacing={8}>
-						
-						<Grid item sm={3}>
-								<Paper className={classes.paper}>
-									<Avatar alt="avatar" src={avatar} className={classes.avatar} />
-									<Typography className = "title-name" variant="h5">
-										{user.username}
-									</Typography>
+    return(
+      <div className={classes.root}>
+        <Navbar />
+        <CssBaseline />
+          <Grid container spacing={8}>
+            
+            <Grid item sm={3}>
+                <Paper className={classes.paper}>
+                  <Avatar alt="avatar" src={avatar} className={classes.avatar} />
+                  <Typography className = "title-name" variant="h5">
+                    {user.username}
+                  </Typography>
 
-									<Typography className = "title-profile" variant="h3">
-										¡53kg salvados!
-									</Typography>
+                  <Typography className = "title-profile" variant="h3">
+                    ¡53kg salvados!
+                  </Typography>
 
-									<Grid container spacing = {8}>
-										<Grid item sm = {6}>
-											<Typography className = "title-name" variant = "h6">
-												Comuna
-											</Typography>
-											<p>{user.address}</p>
-										
-										</Grid>
-										<Grid item sm = {6}>
-											<Typography className = "title-name" variant = "h6">
-												Correo
-											</Typography>
-											<p>{user.email}</p>
-										
-										</Grid>
+                  <Grid container spacing = {8}>
+                    <Grid item sm = {6}>
+                      <Typography className = "title-name" variant = "h6">
+                        Comuna
+                      </Typography>
+                      <p>{user.address}</p>
+                    
+                    </Grid>
+                    <Grid item sm = {6}>
+                      <Typography className = "title-name" variant = "h6">
+                        Correo
+                      </Typography>
+                      <p>{user.email}</p>
+                    
+                    </Grid>
 
-										<Grid item sm = {6}>
-											<Typography className = "title-name" variant = "h6">
-												Organización
-											</Typography>
-											{user.isOrganization ? (
-												<Done />
-											) : (
-												<Clear />
-											)}
-											
-											
-										
-										</Grid>
+                    <Grid item sm = {6}>
+                      <Typography className = "title-name" variant = "h6">
+                        Organización
+                      </Typography>
+                      {user.isOrganization ? (
+                        <Done />
+                      ) : (
+                        <Clear />
+                      )}
+                      
+                      
+                    
+                    </Grid>
 
-										<Grid item sm = {6}>
-											<Typography className = "title-name" variant = "h6">
-												Nombre
-											</Typography>
-											<p>{user.name}</p>
-										</Grid>
-									</Grid>
-								</Paper>
+                    <Grid item sm = {6}>
+                      <Typography className = "title-name" variant = "h6">
+                        Nombre
+                      </Typography>
+                      <p>{user.name}</p>
+                    </Grid>
+                  </Grid>
+                </Paper>
 
-								<Grid item sm = {6}>
+                <Grid item sm = {6}>
 
-									<Button onClick = {() => this.setState({redirectProfile: true})} variant="contained" color="primary" className={classes.button}>
-										Editar perfil  
-										<Edit className={classes.rightIcon} />
-									</Button>
-								</Grid>
-								<Grid item sm = {6}>
+                  <Button onClick = {() => this.setState({redirectProfile: true})} variant="contained" color="primary" className={classes.button}>
+                    Editar perfil  
+                    <Edit className={classes.rightIcon} />
+                  </Button>
+                </Grid>
+                <Grid item sm = {6}>
 
-								<Button variant="contained" onClick={this.handleClickOpen} color="secondary" className={classes.button}>
-									Eliminar cuenta
-									
-									<DeleteIcon className={classes.rightIcon} />
-								</Button>
+                <Button variant="contained" onClick={this.handleClickOpen} color="secondary" className={classes.button}>
+                  Eliminar cuenta
+                  
+                  <DeleteIcon className={classes.rightIcon} />
+                </Button>
 
-							
+              
 
-								</Grid>
+                </Grid>
 
-						</Grid>
-						<Grid item sm={9}>
-							<Paper className={classes.paper}>
-								<Typography className = "title-name" variant = "h3">
-									Reviews
-								</Typography>
+            </Grid>
+            <Grid item sm={9}>
+              <Paper className={classes.paper}>
+                <Typography className = "title-name" variant = "h3">
+                  Reviews
+                </Typography>
 
-								<Grid container>
-
-
-								{this.state.data.map(function(item, i){
-										return(
-											<Grid item sm = {2} key = {i}>
-												<MyCard />
-											</Grid>
-										)
-									})}
-									
-
-								</Grid>
-
-								<Typography className = "title-name" variant = "h3">
-									Publicaciones
-								</Typography>
-
-								<Grid container>
-
-									{this.state.publications.map(function(item, i){
-										return(
-											<Grid item sm = {2} key = {i}>
-												<PublicationCard
-													content = {item.content} title = {item.title} 
-													date = {item.createdAt} 
-													image = {item.image}
-													place = {item.place}
-													user = {user.name}
-													handleModal = {handlePublicationModal}
-													handleShowedPublication = {showedPublicationAction}
-												/>
-											</Grid>
-										)
-									})}
-								</Grid>
-							
-							</Paper>
-						</Grid>
-					
-					</Grid>
-			<Modal
-				aria-labelledby="simple-modal-title"
-				aria-describedby="simple-modal-description"
-				open={publicationModal}
-				onClose={() => handlePublicationModal(false)}
-				style={{alignItems:'center',justifyContent:'center', display: 'flex'}}
-			>
-				<div style={getModalStyle()} className={classes.paperModal}>
-					<Typography variant="h6" id="modal-title">
-						{showedPublication.title}
-					</Typography>
-					<Typography variant="subtitle1" id="simple-modal-description">
-						{showedPublication.content}
-					</Typography>
-				</div>
-			</Modal>
+                <Grid container>
 
 
-			<Dialog
+                {this.state.data.map(function(item, i){
+                    return(
+                      <Grid item sm = {3} key = {i}>
+                        <MyCard />
+                      </Grid>
+                    )
+                  })}
+                  
+
+                </Grid>
+
+                <Typography className = "title-name" variant = "h3">
+                  Publicaciones
+                </Typography>
+
+                <Grid container>
+
+                  {this.state.publications.map(function(item, i){
+                    return(
+                      <Grid item sm = {3} key = {i}>
+                        <PublicationCard
+                          content = {item.content} title = {item.title} 
+                          date = {item.createdAt} 
+                          image = {item.image}
+                          id = {item.id}
+                          place = {item.place}
+                          user = {user.username}
+                          handleModal = {handlePublicationModal}
+                          handleShowedPublication = {showedPublicationAction}
+                          token = {user.token}
+                        />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              
+              </Paper>
+            </Grid>
+          
+          </Grid>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={publicationModal}
+        onClose={() => handlePublicationModal(false)}
+        style={{alignItems:'center',justifyContent:'center', display: 'flex'}}
+      >
+        <div style={getModalStyle()} className={classes.paperModal}>
+          <Typography variant="h6" id="modal-title">
+            {showedPublication.title}
+          </Typography>
+          <Typography variant="subtitle1" id="simple-modal-description">
+            {showedPublication.content}
+          </Typography>
+        </div>
+      </Modal>
+
+
+      <Dialog
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
@@ -328,10 +330,10 @@ class UserProfile extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-		</div>
-		);
-		}
-	}
+    </div>
+    );
+    }
+  }
 
 
 UserProfile.propTypes = {
