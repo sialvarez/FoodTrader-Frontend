@@ -50,7 +50,7 @@ class DisplayUsers extends Component {
   }
 
   getUsers() {
-    const url = 'https://foodtraderbackned.herokuapp.com/users/';
+    const url = 'https://foodtraderbackend.herokuapp.com/users/';
     const {token} = this.state.user;
 		const final_token = 'Bearer ' + token;
 		fetch(url, {

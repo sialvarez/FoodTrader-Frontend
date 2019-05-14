@@ -65,7 +65,7 @@ class Login extends Component {
   }
 
   async postUser(){
-    const url = 'https://foodtraderbackned.herokuapp.com/auth/';
+    const url = 'https://foodtraderbackend.herokuapp.com/auth/';
     const data = { 'username': this.state.username, 'password': this.state.password };
     fetch(url, {
       method: 'POST',

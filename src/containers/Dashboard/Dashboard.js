@@ -60,7 +60,7 @@ class Dashboard extends Component {
   }
 
   async getPublications() {
-    const url = 'https://foodtraderbackned.herokuapp.com/publications/';
+    const url = 'https://foodtraderbackend.herokuapp.com/publications/';
     const {token} = this.state.user;
     const final_token = 'Bearer ' + token;
     fetch(url, {

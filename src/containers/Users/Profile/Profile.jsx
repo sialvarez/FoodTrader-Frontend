@@ -110,7 +110,7 @@ class UserProfile extends Component {
 	
 	handleDelete() {
 		const user_id = this.state.user.id;
-		const url = 'https://foodtraderbackned.herokuapp.com/users/' + user_id;
+		const url = 'https://foodtraderbackend.herokuapp.com/users/' + user_id;
 		const {token} = this.state.user;
 		const final_token = 'Bearer ' + token;
 		fetch(url, {
@@ -132,7 +132,7 @@ class UserProfile extends Component {
 	
 	getUserPublications() {
 		const user_id = this.state.user.id;
-    const url = 'https://foodtraderbackned.herokuapp.com/users/' + user_id + '/publications';
+    const url = 'https://foodtraderbackend.herokuapp.com/users/' + user_id + '/publications';
     const {token} = this.state.user;
     const final_token = 'Bearer ' + token;
     fetch(url, {

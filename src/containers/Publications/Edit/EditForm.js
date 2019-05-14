@@ -77,7 +77,7 @@ class EditPublication extends Component {
   }
 
   async editPublication() {
-    const url = 'https://foodtraderbackned.herokuapp.com/publications/' + this.state.id + "/";
+    const url = 'https://foodtraderbackend.herokuapp.com/publications/' + this.state.id + "/";
     const data = {
       'content': this.state.content,
       'title': this.state.title,

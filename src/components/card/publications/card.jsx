@@ -128,7 +128,7 @@ class PublicationCard extends React.Component {
 	
 	handleDelete() {
     const publication_id = this.state.id;
-		const url = 'https://foodtraderbackned.herokuapp.com/publications/' + publication_id ;
+		const url = 'https://foodtraderbackend.herokuapp.com/publications/' + publication_id ;
 		const {token} = this.state;
     const final_token = 'Bearer ' + token;
     console.log(url);
