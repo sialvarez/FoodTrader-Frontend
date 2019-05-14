@@ -108,6 +108,7 @@ class Dashboard extends Component {
                   user = {item.user.username}
                   handleModal = {handlePublicationModal}
                   handleShowedPublication = {showedPublicationAction}
+                  token = {user.token}
                   />
                 </Grid>
               )

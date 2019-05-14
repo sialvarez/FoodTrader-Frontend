@@ -13,6 +13,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { Redirect } from 'react-router-dom';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const styles = theme => ({
     card: {
@@ -53,12 +61,21 @@ class PublicationCard extends React.Component {
       image: props.image,
       content: props.content,
       id: props.id,
+      token: props.token,
       user: props.user,
       actualUser: props.actualUser,
       place: props.place,
       anchorEl: null,
       redirectEditPublication: false,
+      open: false,
+      redirectHome: false,
     }
+
+    console.log("constructor");
+    console.log(props);
+
+		this.handleCloseDelete = this.handleCloseDelete.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleOnClick = () => {
@@ -84,6 +101,7 @@ class PublicationCard extends React.Component {
     e.stopPropagation();
     this.setState({ anchorEl: null });
   };
+  
 
   handleMenuItemSelection = (e, action) => {
     e.stopPropagation();
@@ -99,19 +117,51 @@ class PublicationCard extends React.Component {
         id,
       });
       this.setState({ redirectEditPublication: true });
+    } else if (action === 'delete'){
+      this.setState({open: true});
     }
   };
+
+  handleCloseDelete() {
+    this.setState({ open: false });
+	};
+	
+	handleDelete() {
+    const publication_id = this.state.id;
+		const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/' + publication_id ;
+		const {token} = this.state;
+    const final_token = 'Bearer ' + token;
+    console.log(url);
+    console.log(final_token);
+		fetch(url, {
+      method: 'DELETE',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+			this.setState({open: false, redirectHome: true});
+		})
+  }
 
   render() {
     const { classes } = this.props;
     const subheader = this.state.user + "   " + this.state.date.slice(0,10);
-    const { anchorEl, redirectEditPublication } = this.state;
+    const { anchorEl, redirectEditPublication, redirectHome } = this.state;
     
     if(redirectEditPublication){
       return <Redirect to='/editPublication' />
+    } else if(redirectHome) {
+      return <Redirect to = '/home' />
     }
 
     return (
+      <div>
       <Card className={classes.card} onClick={this.handleOnClick}>
         <CardHeader
           action={ (this.state.user === this.state.actualUser) && 
@@ -149,8 +199,32 @@ class PublicationCard extends React.Component {
           </Typography>
         </CardContent>
        
-      
+        
       </Card>
+
+      <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"¿Seguro que desea eliminar la publicación?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Considere que tras la eliminación, la información no será recuperable.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseDelete} color="primary">
+              Rechazar
+            </Button>
+            <Button onClick={this.handleDelete} color="primary" autoFocus>
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+      </div>
     );
   }
 }
