@@ -12,7 +12,7 @@ const login = (state = INITIAL_STATE, action) => {
     case LOGIN:
       return { ...state, user: action.payload };
     case LOGOUT:
-      return {};
+      return { user: {} };
     default:
       return state;
   }
