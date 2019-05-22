@@ -129,7 +129,6 @@ class EditPublication extends Component {
 
   render() {
     const { redirect } = this.state;
-    const { classes } = this.props;
     if (redirect) {
       return <Redirect to='/profile'/>;
     }

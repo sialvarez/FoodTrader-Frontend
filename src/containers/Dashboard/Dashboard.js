@@ -136,6 +136,7 @@ class Dashboard extends Component {
               <Email className={classes.leftIcon}/>
               Contactar usuario
             </Button>
+
           </div>
         </Modal>
       </div>
