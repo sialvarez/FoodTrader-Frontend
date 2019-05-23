@@ -106,7 +106,7 @@ const styles = theme => ({
         }} />
       } else if (this.state.redirectReview) {
         return <Redirect to = {{pathname: '/newReview',
-        state: {user: this.state.user}
+        state: {otherUser: this.state.user}
 
       }} />
       }

@@ -76,10 +76,26 @@ class FormReviews extends Component {
     }
 
     async postReview(){
+      console.log(this.state);
       const {token} = this.state.user;
-      const user_id = this.state.otherUser.id;
+      
       const final_token = 'Bearer ' + token;
-      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/reviews';
+      const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/reviews';
+      const data = {'content': this.state.content, 'value': this.state.value,
+       'userId': this.state.otherUser.id, 'userCreatorId': this.state.user.id};
+      console.log(data);
+       fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'mode': 'no-cors',
+            'Authorization': final_token,
+        },
+        body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
   }
 
     handleContentChange(e) {
@@ -151,7 +167,7 @@ class FormReviews extends Component {
                   color= "primary"
                   className = {[this.props.classes.submit, "button-login"].join(' ')}
                   onClick = {this.postReview}
-                  disabled = {!this.state.title || !this.state.place}
+                  disabled = {!this.state.value || !this.state.content}
                   
               >
                   Publicar

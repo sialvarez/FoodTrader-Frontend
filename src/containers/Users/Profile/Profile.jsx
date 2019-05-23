@@ -10,7 +10,7 @@ import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
 import avatar from '../../../assets/img/avatar.jpg'
 import Typography from '@material-ui/core/Typography';
-import MyCard from '../../../components/card/reviews/card.jsx';
+import ReviewCard from '../../../components/card/reviews/card.jsx';
 import PublicationCard from '../../../components/card/publications/card.jsx';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
@@ -81,7 +81,7 @@ class UserProfile extends Component {
     super(props);
     this.state = {
       publications : [],
-      data: ['item 1', 'item 1', 'item 1', 'item 1'],
+      reviews: [],
       user: props.user,
       redirectProfile: false,
       redirectHome: false,
@@ -89,6 +89,7 @@ class UserProfile extends Component {
     }
 
     this.getUserPublications = this.getUserPublications.bind(this);
+    this.getUserReviews = this.getUserReviews.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -97,6 +98,7 @@ class UserProfile extends Component {
   componentDidMount() {
     if(!(Object.keys(this.state.user).length === 0)){
       this.getUserPublications();
+      this.getUserReviews();
     }
   }
 
@@ -148,6 +150,28 @@ class UserProfile extends Component {
     .then(data => {
       this.setState({publications: data.publications})})
   }
+
+  getUserReviews() {
+    const user_id = this.state.user.id;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/reviews';
+    const {token} = this.state.user;
+    const final_token = 'Bearer ' + token;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      this.setState({reviews: data.reviews})})
+  }
+
+  
 
   render() {
     const { user } = this.props;
@@ -251,10 +275,16 @@ class UserProfile extends Component {
                 <Grid container>
 
 
-                {this.state.data.map(function(item, i){
+                {this.state.reviews.map(function(item, i){
                     return(
                       <Grid item sm = {3} key = {i}>
-                        <MyCard />
+                        <ReviewCard 
+                        creatorName = {item.userCreatorId}
+                        userId= {item.userId}
+                        value= {item.value}
+                        content= {item.content}
+                        date= {item.createdAt}
+                        />
                       </Grid>
                     )
                   })}

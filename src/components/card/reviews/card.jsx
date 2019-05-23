@@ -38,8 +38,22 @@ const styles = theme => ({
   
 });
 
-class MyCard extends React.Component {
- 
+class ReviewCard extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      creatorName: props.creatorName,
+      userId: props.userId,
+      value: props.value,
+      content: props.content,
+      date: props.date,
+      stars: [],
+    }
+
+    for (var i = 0; i < props.value; i++){
+      this.state.stars.push(" ");
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -47,25 +61,30 @@ class MyCard extends React.Component {
     return (
       <Card className={classes.card}>
         <CardHeader
-          title = "Juanito"
-          subheader="Septiembre 14, 2016"
+          title = {this.state.creatorName}
+          subheader= {this.state.date}
         />
         <CardContent>
         
           <Typography component="p">
-            ¡Este tipo se robó mi fruta!
+            {this.state.content}
           </Typography>
         </CardContent>
           <IconButton  className = "icon-star" >
-            <StarRounded/>
+            {this.state.stars.map(function(item, i){
+                    return(
+                      <StarRounded/>
+                    )
+                  })}
+            
           </IconButton>
       </Card>
     );
   }
 }
 
-MyCard.propTypes = {
+ReviewCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MyCard);
+export default withStyles(styles)(ReviewCard);
