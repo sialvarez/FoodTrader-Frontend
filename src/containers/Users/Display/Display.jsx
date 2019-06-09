@@ -68,7 +68,6 @@ class DisplayUsers extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       this.setState({users: data})})
   }
 
@@ -93,7 +92,7 @@ class DisplayUsers extends Component {
 					<Grid container>
 						{this.state.users.map(function(item, i){
 								return(
-									<Grid item sm = {3} key = {i}>
+									<Grid item sm = {3} key = {item.id}>
 										<UserCard user = {item}/>
 
 									</Grid>

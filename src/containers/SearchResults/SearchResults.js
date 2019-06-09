@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Dashboard.css";
+import "./SearchResults.css";
 import Navbar from "../../components/navbar/navbar.js"
 import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import Email from '@material-ui/icons/Email';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { loginUser, handlePublicationModal, showedPublicationAction } from '../../actions';
+import { loginUser, handlePublicationModal, showedPublicationAction, redirectSearch } from '../../actions';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -59,24 +59,6 @@ class Dashboard extends Component {
     this.getPublications = this.getPublications.bind(this);
   }
 
-  async getPublications() {
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/';
-    const {token} = this.state.user;
-    const final_token = 'Bearer ' + token;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'mode': 'no-cors',
-          'Authorization': final_token,
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      this.setState({publications: data})})
-  }
-
   componentDidMount() {
     const { user } = this.props;
     if(!(Object.keys(user).length === 0)){
@@ -84,19 +66,53 @@ class Dashboard extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.searchInput !== prevProps.searchInput) {
+      this.getPublications();
+    }
+  }
+
+  componentWillUnmount() {
+    const { dispatchRedirectSearch } = this.props;
+    dispatchRedirectSearch(false);
+  }
+
+  async getPublications() {
+    const { searchInput } = this.props;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/search/';
+    const { token } = this.state.user;
+    const final_token = 'Bearer ' + token;
+    const data = { 'like' : searchInput, 'type': 'publications' };
+    fetch(url, {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({publications: data});
+    })
+  }
+
   render() {
-    const { classes, user, handlePublicationModal, publicationModal, showedPublication, showedPublicationAction } = this.props;
+    const { classes, user, handlePublicationModal, publicationModal, showedPublication, showedPublicationAction, searchInput } = this.props;
     if(Object.keys(user).length === 0){
       return <Redirect to='/' />
     }
+    const { publications } = this.state;
     return (
       <div className={classes.root}>
         <Navbar />
         <CssBaseline />
         <div className={classes.publications}>
-          <h2 className = "title">Bienvenido a Food Trader</h2>
+          <h2 className = "title">Resultados para "{searchInput}"</h2>
           <Grid container>
-            {this.state.publications.map(function(item, i){
+            {publications.map(function(item, i){
               return(
                 <Grid item sm = {3} key = {item.publication.id}>
                   <PublicationCard content = {item.publication.content} title = {item.publication.title} 
@@ -147,13 +163,15 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => {
   const { user } = state.login;
   const { publicationModal, showedPublication } = state.modal;
-  return { user, publicationModal, showedPublication };
+  const { searchInput } = state.search;
+  return { user, publicationModal, showedPublication, searchInput };
 };
 
 const mapDispatchToProps = {
   loginDispatch: loginUser,
   handlePublicationModal,
   showedPublicationAction,
+  dispatchRedirectSearch: redirectSearch,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
