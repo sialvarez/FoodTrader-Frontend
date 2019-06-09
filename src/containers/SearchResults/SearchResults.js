@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { loginUser, handlePublicationModal, showedPublicationAction, redirectSearch } from '../../actions';
 import { Redirect } from 'react-router-dom';
+import UserCard from '../../components/card/users/card.jsx';
 
 const styles = theme => ({
   root: {
@@ -55,20 +56,24 @@ class Dashboard extends Component {
     this.state = {
       user: props.user,
       publications: [],
+      users: [],
     }
     this.getPublications = this.getPublications.bind(this);
+    this.getUsers = this.getUsers.bind(this);
   }
 
   componentDidMount() {
     const { user } = this.props;
     if(!(Object.keys(user).length === 0)){
       this.getPublications();
+      this.getUsers();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.searchInput !== prevProps.searchInput) {
       this.getPublications();
+      this.getUsers();
     }
   }
 
@@ -99,18 +104,41 @@ class Dashboard extends Component {
     })
   }
 
+  async getUsers() {
+    const { searchInput } = this.props;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/search/';
+    const { token } = this.state.user;
+    const final_token = 'Bearer ' + token;
+    const data = { 'like' : searchInput, 'type': 'users' };
+    fetch(url, {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({users: data});
+    })
+  }
+
   render() {
     const { classes, user, handlePublicationModal, publicationModal, showedPublication, showedPublicationAction, searchInput } = this.props;
     if(Object.keys(user).length === 0){
       return <Redirect to='/' />
     }
-    const { publications } = this.state;
+    const { publications, users } = this.state;
     return (
       <div className={classes.root}>
         <Navbar />
         <CssBaseline />
         <div className={classes.publications}>
           <h2 className = "title">Resultados para "{searchInput}"</h2>
+          <h3 className = "title">Publicaciones</h3>
           <Grid container>
             {publications.map(function(item, i){
               return(
@@ -125,6 +153,16 @@ class Dashboard extends Component {
                   handleShowedPublication = {showedPublicationAction}
                   token = {user.token}
                   />
+                </Grid>
+              )
+            })}
+          </Grid>
+          <h3 className = "title">Usuarios</h3>
+          <Grid container>
+            {users.map(function(item, i){
+              return(
+                <Grid item sm = {3} key = {item.id}>
+                  <UserCard user = {item}/>
                 </Grid>
               )
             })}

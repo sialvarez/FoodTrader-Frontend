@@ -29,8 +29,8 @@ const styles = theme => ({
         textAlign: 'center',
         color: theme.palette.text.secondary,
         marginTop: theme.spacing.unit * 2,
-        marginLeft: theme.spacing.unit * 2,
-        marginRight: theme.spacing.unit * 2,
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
       },
     media: {
       height: 0,
@@ -139,7 +139,7 @@ const styles = theme => ({
                 </Typography>
 
 
-                <Grid container spacing = {8}>
+                <Grid container spacing = {6}>
                     <Grid item sm = {6}>
                       <Typography className = "title-name" variant = "h6">
                         Comuna
@@ -151,7 +151,7 @@ const styles = theme => ({
                       <Typography className = "title-name" variant = "h6">
                         Correo
                       </Typography>
-                      <p>{user.email}</p>
+                      <p style={{fontSize: 13}}>{user.email}</p>
                     
                     </Grid>
 
