@@ -219,7 +219,7 @@ class UserProfile extends Component {
                       <Typography className = "title-name" variant = "h6">
                         Correo
                       </Typography>
-                      <p>{user.email}</p>
+                      <p style={{fontSize: 13}}>{user.email}</p>
                     
                     </Grid>
 
