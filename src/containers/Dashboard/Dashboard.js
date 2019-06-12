@@ -110,7 +110,7 @@ class Dashboard extends Component {
           <Grid container>
             {this.state.publications.map(function(item, i) {
               return (
-                <Grid item sm={3} key={i}>
+                <Grid item sm={3} key={item.publication.id}>
                   <PublicationCard
                     content={item.publication.content}
                     title={item.publication.title}

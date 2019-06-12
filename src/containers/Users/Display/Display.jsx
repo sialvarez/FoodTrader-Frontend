@@ -9,6 +9,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { loginUser, handlePublicationModal, showedPublicationAction } from '../../../actions';
 import { Redirect } from 'react-router-dom';
+import UserCard from '../../../components/card/users/card.jsx';
+
+
+
 
 const styles = theme => ({
     root: {
@@ -64,7 +68,6 @@ class DisplayUsers extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       this.setState({users: data})})
   }
 
@@ -89,10 +92,8 @@ class DisplayUsers extends Component {
 					<Grid container>
 						{this.state.users.map(function(item, i){
 								return(
-									<Grid item sm = {3} key = {i}>
-										<div>
-											<p> {item.name} - {item.address}</p>
-										</div>
+									<Grid item sm = {3} key = {item.id}>
+										<UserCard user = {item}/>
 
 									</Grid>
 								)

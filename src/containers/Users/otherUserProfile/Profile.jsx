@@ -10,24 +10,16 @@ import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
 import avatar from '../../../assets/img/avatar.jpg'
 import Typography from '@material-ui/core/Typography';
-import ReviewCard from '../../../components/card/reviews/card.jsx';
+import MyCard from '../../../components/card/reviews/card.jsx';
 import PublicationCard from '../../../components/card/publications/card.jsx';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { handlePublicationModal, showedPublicationAction } from '../../../actions';
 import { Redirect } from 'react-router-dom';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Email from '@material-ui/icons/Email';
 import Edit from '@material-ui/icons/Edit';
 import Done from '@material-ui/icons/Done';
 import Clear from '@material-ui/icons/Clear';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-
 
 const styles = theme => ({
     root: {
@@ -75,30 +67,28 @@ function getModalStyle() {
   };
 }
 
-class UserProfile extends Component {
+class otherProfile extends Component {
 
   constructor(props){
     super(props);
     this.state = {
       publications : [],
-      reviews: [],
+      data: ['item 1', 'item 1', 'item 1', 'item 1'],
+      otherUser: props.location.state.otherUser,
       user: props.user,
-      redirectProfile: false,
+      redirectReview: false,
       redirectHome: false,
       open: false,
     }
-
     this.getUserPublications = this.getUserPublications.bind(this);
-    this.getUserReviews = this.getUserReviews.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleReview = this.handleReview.bind(this);
   }
 
   componentDidMount() {
     if(!(Object.keys(this.state.user).length === 0)){
       this.getUserPublications();
-      this.getUserReviews();
     }
   }
 
@@ -109,31 +99,14 @@ class UserProfile extends Component {
   handleClose() {
     this.setState({ open: false });
   };
+
+  handleReview() {
+    this.setState({redirectReview: true});
+  };
   
-  handleDelete() {
-    const user_id = this.state.user.id;
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id;
-    const {token} = this.state.user;
-    const final_token = 'Bearer ' + token;
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'mode': 'no-cors',
-          'Authorization': final_token,
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      
-      this.setState({open: false, redirectHome: true});
-    })
-    
-  }
-  
+
   getUserPublications() {
-    const user_id = this.state.user.id;
+    const user_id = this.state.otherUser.id;
     const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/publications';
     const {token} = this.state.user;
     const final_token = 'Bearer ' + token;
@@ -151,44 +124,24 @@ class UserProfile extends Component {
       this.setState({publications: data.publications})})
   }
 
-  getUserReviews() {
-    const user_id = this.state.user.id;
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/reviews';
-    const {token} = this.state.user;
-    const final_token = 'Bearer ' + token;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'mode': 'no-cors',
-          'Authorization': final_token,
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      this.setState({reviews: data.reviews})})
-  }
-
-  
-
   render() {
     const { user } = this.props;
+    const { otherUser } = this.state;
+
     if(Object.keys(user).length === 0){
       return <Redirect to='/login' />
-    }
+    } else if (Object.keys(otherUser).length === 0 ){
+        return <Redirect to='/home' />
+    } else if (this.state.redirectReview) {
+      return <Redirect to = {{pathname: '/newReview',
+      state: {user: this.state.user}
 
-    if (this.state.redirectProfile) {
-      return <Redirect to='/editUser' />
-    }
-
-    if (this.state.redirectHome) {
-      return <Redirect to = '/' />
+    }} />
     }
 
     const { publicationModal, showedPublication } = this.props;
     const { classes, handlePublicationModal, showedPublicationAction } = this.props;
+    
 
     return(
       <div className={classes.root}>
@@ -200,7 +153,7 @@ class UserProfile extends Component {
                 <Paper className={classes.paper}>
                   <Avatar alt="avatar" src={avatar} className={classes.avatar} />
                   <Typography className = "title-name" variant="h5">
-                    {user.username}
+                    {otherUser.username}
                   </Typography>
 
                   <Typography className = "title-profile" variant="h3">
@@ -212,14 +165,14 @@ class UserProfile extends Component {
                       <Typography className = "title-name" variant = "h6">
                         Comuna
                       </Typography>
-                      <p>{user.address}</p>
+                      <p>{otherUser.address}</p>
                     
                     </Grid>
                     <Grid item sm = {6}>
                       <Typography className = "title-name" variant = "h6">
                         Correo
                       </Typography>
-                      <p style={{fontSize: 13}}>{user.email}</p>
+                      <p>{otherUser.email}</p>
                     
                     </Grid>
 
@@ -227,7 +180,7 @@ class UserProfile extends Component {
                       <Typography className = "title-name" variant = "h6">
                         Organización
                       </Typography>
-                      {user.isOrganization ? (
+                      {otherUser.isOrganization ? (
                         <Done />
                       ) : (
                         <Clear />
@@ -241,28 +194,25 @@ class UserProfile extends Component {
                       <Typography className = "title-name" variant = "h6">
                         Nombre
                       </Typography>
-                      <p>{user.name}</p>
+                      <p>{otherUser.name}</p>
                     </Grid>
                   </Grid>
                 </Paper>
 
                 <Grid item sm = {6}>
 
-                  <Button onClick = {() => this.setState({redirectProfile: true})} variant="contained" color="primary" className={classes.button}>
-                    Editar perfil  
-                    <Edit className={classes.rightIcon} />
-                  </Button>
+                    <Button onClick = {this.handleReview} variant="contained" color="primary" className={classes.button}>
+                      Nueva review  
+                      <Edit className={classes.rightIcon} />
+                    </Button>
                 </Grid>
+
                 <Grid item sm = {6}>
 
-                <Button variant="contained" onClick={this.handleClickOpen} color="secondary" className={classes.button}>
-                  Eliminar cuenta
-                  
-                  <DeleteIcon className={classes.rightIcon} />
-                </Button>
-
-              
-
+                    <Button variant="contained" color="primary" className={classes.button}>
+                      Contactar vendedor
+                      <Email className={classes.rightIcon} />
+                    </Button>
                 </Grid>
 
             </Grid>
@@ -275,16 +225,10 @@ class UserProfile extends Component {
                 <Grid container>
 
 
-                {this.state.reviews.map(function(item, i){
+                {this.state.data.map(function(item, i){
                     return(
                       <Grid item sm = {3} key = {i}>
-                        <ReviewCard 
-                        creatorName = {item.userCreatorId}
-                        userId= {item.userId}
-                        value= {item.value}
-                        content= {item.content}
-                        date= {item.createdAt}
-                        />
+                        <MyCard />
                       </Grid>
                     )
                   })}
@@ -307,7 +251,7 @@ class UserProfile extends Component {
                           image = {item.image}
                           id = {item.id}
                           place = {item.place}
-                          user = {user.username}
+                          user = {otherUser.username}
                           handleModal = {handlePublicationModal}
                           handleShowedPublication = {showedPublicationAction}
                           token = {user.token}
@@ -337,36 +281,13 @@ class UserProfile extends Component {
           </Typography>
         </div>
       </Modal>
-
-
-      <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"¿Seguro que desea eliminar su cuenta?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Considere que tras la eliminación, la información asociada a la cuenta no podrá ser recuperada.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Rechazar
-            </Button>
-            <Button onClick={this.handleDelete} color="primary" autoFocus>
-              Aceptar
-            </Button>
-          </DialogActions>
-        </Dialog>
     </div>
     );
     }
   }
 
 
-UserProfile.propTypes = {
+  otherProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -381,4 +302,4 @@ const mapDispatchToProps = {
   showedPublicationAction,
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserProfile));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(otherProfile));

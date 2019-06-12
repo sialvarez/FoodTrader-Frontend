@@ -11,7 +11,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Clear from '@material-ui/icons/Clear';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import RecentActors from '@material-ui/icons/RecentActors';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 import Home from '@material-ui/icons/Home';
@@ -21,7 +21,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Tooltip from '@material-ui/core/Tooltip';
-import { logoutAction } from '../../actions';
+import { logoutAction, changeSearch, redirectSearch } from '../../actions';
 
 const styles = theme => ({
   root: {
@@ -73,7 +73,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing.unit,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -98,10 +98,14 @@ class navbar extends React.Component {
       redirectToHome: false,
       redirectToUsers: false,
       redirectToLogout: false,
+      redirectToSearchResultState: false,
       logout: false,
+      input: '',
     }
     this.handleCloseLogout = this.handleCloseLogout.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleSearchResult = this.handleSearchResult.bind(this);
+    this.handleSearching = this.handleSearching.bind(this);
   }
 
   handleCloseLogout() {
@@ -114,10 +118,25 @@ class navbar extends React.Component {
     dispatchLogout();
   }
 
+  handleSearching(e) {
+    const input = e.target.value;
+    this.setState({ input });
+  }
+
+  handleSearchResult() {
+    const { input } = this.state;
+    const { dispatchChangeSearch, redirectToSearchResult, dispatchRedirectSearch } = this.props;
+    dispatchChangeSearch(input);
+    if (!redirectToSearchResult) {
+      this.setState({ redirectToSearchResultState: true });
+      dispatchRedirectSearch(true);
+    }
+  }
+
   render() {
   
-    const { classes } = this.props;
-    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout } = this.state;
+    const { classes, searchInput } = this.props;
+    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout, redirectToSearchResultState } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {
@@ -128,6 +147,8 @@ class navbar extends React.Component {
       return <Redirect to ='/users' />;
     } else if (redirectToLogout) {
       return <Redirect to ='/' />;
+    } else if (redirectToSearchResultState) {
+      return <Redirect to ='/search' />;
     }
 
     return (
@@ -143,34 +164,34 @@ class navbar extends React.Component {
               </IconButton>
             </Tooltip>
             <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
               <InputBase
                 placeholder="Search…"
+                onChange={this.handleSearching}
+                value={this.state.input}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
               />
             </div>
+            <IconButton color="inherit" onClick = {this.handleSearchResult} >
+              <SearchIcon />
+            </IconButton>
             <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-            <Tooltip title="New publication">
-              <IconButton color="inherit" onClick = {() => this.setState({redirectToNewPublication: true})} >
-              
-                    <AddCircleOutline />
-              
+              <div className={classes.sectionDesktop}>
+              <Tooltip title="Nueva publicación">
+                <IconButton color="inherit" onClick = {() => this.setState({redirectToNewPublication: true})} >
+                  <AddCircleOutline />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="All users">
+              <Tooltip title="Todos los usuarios">
               <IconButton color="inherit" onClick = {() => this.setState({redirectToUsers: true})}>
                 <Badge badgeContent={0} color="secondary">
                   <RecentActors />
                 </Badge>
               </IconButton>
               </Tooltip>
-              <Tooltip title="Profile">
+              <Tooltip title="Perfil">
               <IconButton
                 color="inherit"
                 onClick = {() => this.setState({redirectToProfile: true})} 
@@ -178,12 +199,12 @@ class navbar extends React.Component {
                 <AccountCircle />
               </IconButton>
               </Tooltip>
-              <Tooltip title="Logout">
+              <Tooltip title="Cerrar sesión">
               <IconButton
                 color="inherit"
                 onClick = {() => this.setState({logout: true})} 
               >
-                <Clear />
+                <ExitToApp />
               </IconButton>
               </Tooltip>
             </div>
@@ -217,11 +238,14 @@ navbar.propTypes = {
 
 const mapStateToProps = (state) => {
   const { user } = state.login;
-  return { user };
+  const { searchInput, redirectToSearchResult } = state.search;
+  return { user, searchInput, redirectToSearchResult };
 };
 
 const mapDispatchToProps = {
   dispatchLogout: logoutAction,
+  dispatchChangeSearch: changeSearch,
+  dispatchRedirectSearch: redirectSearch,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(navbar));
