@@ -127,8 +127,6 @@ class PublicationCard extends React.Component {
 		const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/publications/' + publication_id ;
 		const {token} = this.state;
     const final_token = 'Bearer ' + token;
-    console.log(url);
-    console.log(final_token);
 		fetch(url, {
       method: 'DELETE',
       headers: {
@@ -140,7 +138,6 @@ class PublicationCard extends React.Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
 			this.setState({open: false, redirectHome: true});
 		})
   }
