@@ -24,6 +24,7 @@ const requestPermission = async () => {
   await messaging.requestPermission();
   console.log('yapo k wea');
   const token = await messaging.getToken();
+  messaging.onMessage(payload => console.log('Message received. ', payload));
   console.log(token);
 
   return token;
