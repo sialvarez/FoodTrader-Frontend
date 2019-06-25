@@ -99,6 +99,7 @@ class navbar extends React.Component {
       redirectToUsers: false,
       redirectToLogout: false,
       redirectToSearchResultState: false,
+      redirectToChat: false,
       logout: false,
       input: '',
     }
@@ -136,7 +137,7 @@ class navbar extends React.Component {
   render() {
   
     const { classes, searchInput } = this.props;
-    const { redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout, redirectToSearchResultState } = this.state;
+    const { redirectToChat, redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout, redirectToSearchResultState } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {
@@ -149,6 +150,8 @@ class navbar extends React.Component {
       return <Redirect to ='/' />;
     } else if (redirectToSearchResultState) {
       return <Redirect to ='/search' />;
+    } else if (redirectToChat) {
+      return <Redirect to ='/chat' />;
     }
 
     return (
@@ -186,6 +189,13 @@ class navbar extends React.Component {
               </Tooltip>
               <Tooltip title="Todos los usuarios">
               <IconButton color="inherit" onClick = {() => this.setState({redirectToUsers: true})}>
+                <Badge badgeContent={0} color="secondary">
+                  <RecentActors />
+                </Badge>
+              </IconButton>
+              </Tooltip>
+              <Tooltip title="Chat">
+              <IconButton color="inherit" onClick = {() => this.setState({redirectToChat: true})}>
                 <Badge badgeContent={0} color="secondary">
                   <RecentActors />
                 </Badge>

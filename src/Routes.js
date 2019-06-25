@@ -13,6 +13,7 @@ import PublicationEdit from "./containers/Publications/Edit/EditForm.js";
 import otherProfile from "./containers/Users/otherUserProfile/Profile.jsx";
 import FormReviews from "./containers/Reviews/Form/Form.jsx";
 import SearchResults from "./containers/SearchResults/SearchResults.js";
+import Chat from "./containers/Chat/Chat.jsx";
 
 export default () =>
   <Switch>  
@@ -29,5 +30,6 @@ export default () =>
     <Route path = "/register" component = {Register} />
     <Route path= "/home" exact component = {Dashboard} />
     <Route path= "/search" exact component = {SearchResults} />
+    <Route path = "/chat" exact component = {Chat}/>
     <Route component = {NotFound}/>
   </Switch>;
