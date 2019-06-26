@@ -228,7 +228,7 @@ class otherProfile extends Component {
                 {this.state.data.map(function(item, i){
                     return(
                       <Grid item sm = {3} key = {i}>
-                        <MyCard />
+                        <MyCard item = {item} />
                       </Grid>
                     )
                   })}
