@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import Send from '@material-ui/icons/Send';
 import {
   loginUser,
 } from '../../actions';
@@ -28,6 +31,17 @@ const styles = theme => ({
   },
   avatarWrapper: {
     width: '10%',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit * 1,
+    marginRight: theme.spacing.unit * 1,
+  },
+  sendButton: {
+    width: '10%',
+    margin: 'auto',
+  },
+  input: {
+    fontSize: 14,
   },
 });
 
@@ -69,6 +83,29 @@ class Chat extends React.Component {
               isMine={parseInt(item.userId) === parseInt(user.id)}
             />
           )}
+        </div>
+
+        <div className={classes.header}>
+          <TextField
+            id="outlined-bare"
+            className={classes.textField}
+            margin="normal"
+            variant="outlined"
+            fullWidth={true}
+            InputProps={{
+              classes: {
+                input: classes.input,
+              },
+            }}
+          />
+          <div className={classes.sendButton}>
+            <IconButton
+              color="primary"
+              onClick = {() => console.log('send')} 
+            >
+              <Send />
+            </IconButton>
+          </div>
         </div>
       </div>
     );
