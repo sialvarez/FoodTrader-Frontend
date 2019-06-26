@@ -14,6 +14,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import RecentActors from '@material-ui/icons/RecentActors';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
+import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import Home from '@material-ui/icons/Home';
 import { Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -196,9 +197,7 @@ class navbar extends React.Component {
               </Tooltip>
               <Tooltip title="Chat">
               <IconButton color="inherit" onClick = {() => this.setState({redirectToChat: true})}>
-                <Badge badgeContent={0} color="secondary">
-                  <RecentActors />
-                </Badge>
+                <ChatBubbleOutline />
               </IconButton>
               </Tooltip>
               <Tooltip title="Perfil">

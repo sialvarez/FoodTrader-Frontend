@@ -8,8 +8,10 @@ import {
   showedPublicationAction,
 } from '../../actions';
 import Navbar from '../../components/navbar/navbar.js';
+import ChatMessages from '../../components/chat/chatMessages.js';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
     card: {
@@ -60,13 +62,18 @@ const styles = theme => ({
     componentDidMount() {
       const { user } = this.props;
       if (!(Object.keys(user).length === 0)) {
-        this.getChats();
+        //this.getChats();
+        console.log('get chats');
       }
     }
 
     render() {
 
       const {user, classes} = this.props;
+
+      if (Object.keys(user).length === 0) {
+        return <Redirect to="/" />;
+      }
       
       return (
         <div>
@@ -76,7 +83,44 @@ const styles = theme => ({
               <Paper className={classes.paper}>Mi zona</Paper>
             </Grid>
             <Grid item xs={8}>
-              <Paper className={classes.paper}>Zona de la Javi</Paper>
+              <Paper className={classes.paper}>
+                <ChatMessages
+                  userChat={{
+                    "id": 1,
+                    "name": "Jorge",
+                    "username": "jabecerra",
+                    "password": "$2b$10$J8bgSagwn6.48TAk61qGfOGBVCztWtSZZvU/JaehtP0G.JdRvpiLG",
+                    "address": "Backend",
+                    "email": "jorge@backend.cl",
+                    "isOrganization": false,
+                    "isActive": true,
+                    "createdAt": "2019-04-14T19:11:36.847Z",
+                    "updatedAt": "2019-04-14T19:11:36.847Z"
+                  }}
+                  messages={
+                    [
+                      {
+                        "id": 3,
+                        "content": "Hola Jorge",
+                        "isActive": true,
+                        "createdAt": "2019-04-14T19:11:36.847Z",
+                        "updatedAt": "2019-04-14T19:11:36.847Z",
+                        "chatId": 2,
+                        "userId": 2
+                      },
+                      {
+                        "id": 4,
+                        "content": "Hola Roy",
+                        "isActive": true,
+                        "createdAt": "2019-04-14T19:11:36.847Z",
+                        "updatedAt": "2019-04-14T19:11:36.847Z",
+                        "chatId": 2,
+                        "userId": 1
+                      }
+                    ]
+                  }
+                />
+              </Paper>
             </Grid>
           </Grid>
         </div>
