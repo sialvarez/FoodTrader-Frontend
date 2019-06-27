@@ -66,7 +66,7 @@ const requestPermission = async () => {
   const token = await messaging.getToken();
   //messaging.onMessage(payload => console.log('Message received. ', payload));
   console.log(token);
-  return messaging;
+  return [messaging, token];
 };
 
 function getModalStyle() {
@@ -120,6 +120,25 @@ class Dashboard extends Component {
     newMessageAction(payload);
   }
 
+  sendFirebaseToken(firebaseToken) {
+    const { token } = this.props.user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/firebaseToken/';
+    const final_token = 'Bearer ' + token;
+    const data = { 'token': firebaseToken };
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+  }
+
   render() {
     const {
       classes,
@@ -132,8 +151,11 @@ class Dashboard extends Component {
     if (Object.keys(user).length === 0) {
       return <Redirect to="/" />;
     }
-    requestPermission().then(messaging => {
+    requestPermission().then(arr => {
+      const messaging = arr[0];
+      const token = arr[1];
       messaging.onMessage(this.onMessage);
+      this.sendFirebaseToken(token);
     });
     return (
       <div className={classes.root}>
