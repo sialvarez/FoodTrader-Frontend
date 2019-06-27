@@ -14,8 +14,11 @@ import {
   loginUser,
   handlePublicationModal,
   showedPublicationAction,
+  newMessageAction,
 } from '../../actions';
 import { Redirect } from 'react-router-dom';
+import firebase from 'firebase/app';
+import 'firebase/messaging';
 
 const styles = theme => ({
   root: {
@@ -24,6 +27,7 @@ const styles = theme => ({
   publications: {
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 4,
   },
   paper: {
     position: 'absolute',
@@ -43,6 +47,27 @@ const styles = theme => ({
     fontSize: 10,
   },
 });
+
+const config = {
+  apiKey: 'AIzaSyDJMBUYLRQqfC2u3HHFXUvLuXO0GlYhokI',
+  authDomain: 'foodtrader-74ab3.firebaseapp.com',
+  databaseURL: 'https://foodtrader-74ab3.firebaseio.com',
+  projectId: 'foodtrader-74ab3',
+  storageBucket: '',
+  messagingSenderId: '301000161708',
+  appId: '1:301000161708:web:c3302d7cd81d9c76',
+};
+
+firebase.initializeApp(config);
+
+const requestPermission = async () => {
+  const messaging = firebase.messaging();
+  await messaging.requestPermission();
+  const token = await messaging.getToken();
+  //messaging.onMessage(payload => console.log('Message received. ', payload));
+  console.log(token);
+  return messaging;
+};
 
 function getModalStyle() {
   const top = 30;
@@ -89,6 +114,12 @@ class Dashboard extends Component {
     }
   }
 
+  onMessage(payload) {
+    console.log('Message received. ', payload);
+    const { newMessageAction } = this.props;
+    newMessageAction(payload);
+  }
+
   render() {
     const {
       classes,
@@ -101,12 +132,17 @@ class Dashboard extends Component {
     if (Object.keys(user).length === 0) {
       return <Redirect to="/" />;
     }
+    requestPermission().then(messaging => {
+      messaging.onMessage(this.onMessage);
+    });
     return (
       <div className={classes.root}>
         <Navbar />
         <CssBaseline />
         <div className={classes.publications}>
-          <h2 className="title">Bienvenido a Food Trader</h2>
+          <Typography variant="h3" align="center" gutterBottom>
+            Bienvenido a Food Trader
+          </Typography>
           <Grid container>
             {this.state.publications.map(function(item, i) {
               return (
@@ -170,6 +206,7 @@ const mapDispatchToProps = {
   loginDispatch: loginUser,
   handlePublicationModal,
   showedPublicationAction,
+  newMessageAction,
 };
 
 export default withStyles(styles)(

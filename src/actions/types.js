@@ -6,3 +6,4 @@ export const EDIT_PUBLICATION = 'EDIT_PUBLICATION';
 export const LOGOUT = 'LOGOUT';
 export const SEARCH = 'SEARCH';
 export const REDIRECT_SEARCH = 'REDIRECT_SEARCH';
+export const NEW_MESSAGE = 'NEW_MESSAGE';

@@ -4,6 +4,7 @@ import login from './loginReducer'
 import modal from './modalReducer'
 import publication from './publicationReducer'
 import search from './searchReducer'
+import chat from './chatReducer'
 
 const rootReducer = combineReducers({
   tests,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   modal,
   publication,
   search,
+  chat,
 });
 
 export default rootReducer;

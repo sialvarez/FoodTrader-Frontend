@@ -77,7 +77,7 @@ class Chat extends React.Component {
     this.state = {
       chats: [],
       currentChat: {messages: [], user: {}},
-    }
+    };
     this.getUserChats = this.getUserChats.bind(this);
     this.changeChat = this.changeChat.bind(this);
     
@@ -93,15 +93,15 @@ class Chat extends React.Component {
   changeChat(index){
     var chat = this.state.chats[index];
     this.setState({currentChat: chat});
-    console.log(chat);
   }
   
 
   getUserChats() {
     var chat = {};
     var chats = [];
+    const { token } = this.props.user;
     const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
-    const final_token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJyb3kzNTAiLCJwYXNzd29yZCI6IiQyYiQxMCR4VHdyWjVjeS9ELnlKRWYveDZzbkR1OUVHLk52RW1jREdGMTY5ZHdqUGdrb0NZSWt4aFZndSIsIm5hbWUiOiJSb2RyaWdvIiwiYWRkcmVzcyI6IkJhY2tlbmQiLCJlbWFpbCI6InJvZHJpZ29AYmFja2VuZC5jbCIsImlzT3JnYW5pemF0aW9uIjpmYWxzZSwiaXNBY3RpdmUiOnRydWUsImlhdCI6MTU2MTU3MDU5MywiZXhwIjoxNTYxNjEzNzkzfQ.1gtzxAfWvCfN3ndPXhVuaZJ2DbMqJXWh7PFbwCDdcQw';
+    const final_token = 'Bearer ' + token;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -143,7 +143,7 @@ class Chat extends React.Component {
                {this.state.chats.map(function(item, i){
                   return(
                     <div key = {i}>
-                      <ChatItem customClick = {this.changeChat} index = {i} userName = {item.user.name} lastMessage = {item.messages[0].content}/>
+                      <ChatItem customClick = {this.changeChat} index = {i} userName = {item.user.name} lastMessage = {item.messages[item.messages.length - 1].content}/>
                       <Divider variant="inset" component="li" />
                     </div>
                   )
@@ -155,8 +155,8 @@ class Chat extends React.Component {
           <Grid item xs={8}>
             <Paper className={classes.paper}>
               <ChatMessages
+                chatId={this.state.currentChat.id}
                 userChat={this.state.currentChat.user}
-                messages={this.state.currentChat.messages}
               />
             </Paper>
           </Grid>

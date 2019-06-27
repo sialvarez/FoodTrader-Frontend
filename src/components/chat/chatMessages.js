@@ -12,6 +12,7 @@ import {
 } from '../../actions';
 import avatar from '../../assets/img/avatar.jpg';
 import Avatar from '@material-ui/core/Avatar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import './chatMessages.css';
 
 const styles = theme => ({
@@ -20,8 +21,8 @@ const styles = theme => ({
   },
   avatar: {
     margin: 'auto',
-    height: 26,
-    width: 26,
+    height: 30,
+    width: 30,
   },
   header: {
     display: 'flex',
@@ -43,6 +44,9 @@ const styles = theme => ({
   input: {
     fontSize: 14,
   },
+  progress: {
+    margin: 'auto',
+  },
 });
 
 function ChatBubble(props) {
@@ -62,15 +66,93 @@ function ChatBubble(props) {
 }
   
 class Chat extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      text: '',
+      messages: [],
+      currentId: 100,
+    };
+    this.send = this.send.bind(this);
+    this.nextId = this.nextId.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.chatId !== this.props.chatId) {
+      this.setState({ text: '', messages: [] });
+      this.getChatHistory();
+    }
+    if (prevProps.newMessage !== this.props.newMessage) {
+      const { messages } = this.state;
+      // this.setState({ messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]) });
+    }
+  }
+
+  getChatHistory() {
+    const { chatId, user } = this.props;
+    const { token } = user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/' + chatId;
+    const final_token = 'Bearer ' + token;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({ messages: data.messages }))
+  }
+
+  nextId() {
+    const { currentId } = this.state;
+    const newId = currentId + 1;
+    this.setState({ currentId: newId });
+    return newId;
+  }
+
+  send() {
+    const { chatId, user } = this.props;
+    const { text } = this.state;
+    const { token, id } = user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
+    const final_token = 'Bearer ' + token;
+    const data = { 'content': text, 'chatId': chatId };
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .catch((error)=>console.log(error))
+
+    const { messages } = this.state;
+    this.setState({
+      text: '',
+      messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]),
+    });
+  }
+
   render() {
-    const { classes, user, messages, userChat } = this.props;
+    const { classes, user, userChat } = this.props;
+    const { messages } = this.state;
+    if (messages.length === 0) {
+      return(<CircularProgress className={classes.progress} />);
+    }
     return (
       <div>
         <div className={classes.header}>
           <div className={classes.avatarWrapper}>
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />
           </div>
-          <Typography gutterBottom variant="h4" align="left">
+          <Typography variant="h4" align="left">
             {userChat.name}
           </Typography>
         </div>
@@ -89,6 +171,8 @@ class Chat extends React.Component {
           <TextField
             id="outlined-bare"
             className={classes.textField}
+            onChange={(event) => { this.setState({ text: event.target.value }) }}
+            value={this.state.text}
             margin="normal"
             variant="outlined"
             fullWidth={true}
@@ -101,7 +185,7 @@ class Chat extends React.Component {
           <div className={classes.sendButton}>
             <IconButton
               color="primary"
-              onClick = {() => console.log('send')} 
+              onClick = {this.send} 
             >
               <Send />
             </IconButton>
@@ -119,7 +203,8 @@ Chat.propTypes = {
 
 const mapStateToProps = state => {
   const { user } = state.login;
-  return { user };
+  const { newMessage } = state.chat;
+  return { user, newMessage };
 };
 
 const mapDispatchToProps = {

@@ -21,6 +21,7 @@ const styles = theme => ({
   publications: {
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 4,
   },
   paper: {
     position: 'absolute',
@@ -137,8 +138,14 @@ class Dashboard extends Component {
         <Navbar />
         <CssBaseline />
         <div className={classes.publications}>
-          <h2 className = "title">Resultados para "{searchInput}"</h2>
-          <h3 className = "title">Publicaciones</h3>
+          <Typography variant="h3" align="center" gutterBottom>
+            Resultados para "{searchInput}"
+          </Typography>
+          {publications.length !== 0 && (
+            <Typography variant="h4" align="center" gutterBottom>
+              Publicaciones
+            </Typography>
+          )}
           <Grid container>
             {publications.map(function(item, i){
               return(
@@ -157,7 +164,11 @@ class Dashboard extends Component {
               )
             })}
           </Grid>
-          <h3 className = "title">Usuarios</h3>
+          {users.length !== 0 && (
+            <Typography variant="h4" align="center" gutterBottom>
+              Usuarios
+            </Typography>
+          )}
           <Grid container>
             {users.map(function(item, i){
               return(
