@@ -84,6 +84,7 @@ class Chat extends React.Component {
     }
     if (prevProps.newMessage !== this.props.newMessage) {
       const { messages } = this.state;
+      console.log("NUEVO MENSAJE ", this.props.newMessage);
       // this.setState({ messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]) });
     }
   }
@@ -117,7 +118,7 @@ class Chat extends React.Component {
     const { chatId, user } = this.props;
     const { text } = this.state;
     const { token, id } = user;
-    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/messages/';
     const final_token = 'Bearer ' + token;
     const data = { 'content': text, 'chatId': chatId };
     fetch(url, {
@@ -131,13 +132,15 @@ class Chat extends React.Component {
       body: JSON.stringify(data),
     })
     .then(response => response.json())
-    .catch((error)=>console.log(error))
-
-    const { messages } = this.state;
-    this.setState({
-      text: '',
-      messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]),
-    });
+    .then(data => {
+      if (data.message) {
+        const { messages } = this.state;
+        this.setState({
+          text: '',
+          messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]),
+        });
+      }
+    })
   }
 
   render() {
