@@ -114,10 +114,9 @@ class Dashboard extends Component {
     }
   }
 
-  onMessage(payload) {
-    console.log('Message received. ', payload);
+  saveMessaging(messaging) {
     const { newMessageAction } = this.props;
-    newMessageAction(payload);
+    newMessageAction(messaging);
   }
 
   sendFirebaseToken(firebaseToken) {
@@ -154,7 +153,7 @@ class Dashboard extends Component {
     requestPermission().then(arr => {
       const messaging = arr[0];
       const token = arr[1];
-      messaging.onMessage(this.onMessage);
+      this.saveMessaging(messaging);
       this.sendFirebaseToken(token);
     });
     return (

@@ -75,6 +75,8 @@ class Chat extends React.Component {
     };
     this.send = this.send.bind(this);
     this.nextId = this.nextId.bind(this);
+    this.onMessage = this.onMessage.bind(this);
+    props.newMessage.onMessage(this.onMessage);
   }
 
   componentDidUpdate(prevProps) {
@@ -82,10 +84,16 @@ class Chat extends React.Component {
       this.setState({ text: '', messages: [] });
       this.getChatHistory();
     }
-    if (prevProps.newMessage !== this.props.newMessage) {
+  }
+
+  onMessage(payload) {
+    console.log('Message received. ', payload);
+    const chatId = parseInt(payload.data.chatId, 10);
+    if (chatId === parseInt(this.props.chatId, 10)) {
+      const text = payload.data.message;
+      const id = payload.data.senderId;
       const { messages } = this.state;
-      console.log("NUEVO MENSAJE ", this.props.newMessage);
-      // this.setState({ messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]) });
+      this.setState({ messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]) });
     }
   }
 
