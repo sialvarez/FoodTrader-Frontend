@@ -72,6 +72,7 @@ class Chat extends React.Component {
       text: '',
       messages: [],
       currentId: 100,
+      lastId: '',
     };
     this.send = this.send.bind(this);
     this.nextId = this.nextId.bind(this);
@@ -89,7 +90,8 @@ class Chat extends React.Component {
   onMessage(payload) {
     console.log('Message received. ', payload);
     const chatId = parseInt(payload.data.chatId, 10);
-    if (chatId === parseInt(this.props.chatId, 10)) {
+    if (chatId === parseInt(this.props.chatId, 10) && this.state.lastId !== payload.data.messageId) {
+      this.setState({ lastId: payload.data.messageId });
       const text = payload.data.message;
       const id = payload.data.senderId;
       const { messages } = this.state;
