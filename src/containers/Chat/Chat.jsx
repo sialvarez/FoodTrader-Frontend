@@ -22,6 +22,7 @@ const styles = theme => ({
     maxWidth: 500,
     backgroundColor: theme.palette.background.paper,
     borderColor: theme.palette.text.secondary,
+    overflow: 'auto',
   },
   inline: {
     display: 'inline',
@@ -91,6 +92,7 @@ class Chat extends React.Component {
   }
 
   changeChat(index){
+    //this.getUserChats();
     var chat = this.state.chats[index];
     this.setState({currentChat: chat});
   }
@@ -143,7 +145,8 @@ class Chat extends React.Component {
                {this.state.chats.map(function(item, i){
                   return(
                     <div key = {i}>
-                      <ChatItem customClick = {this.changeChat} index = {i} userName = {item.user.name} lastMessage = {item.messages[item.messages.length - 1].content}/>
+                      <ChatItem customClick = {this.changeChat} index = {i} userName = {item.user.name} 
+                      lastMessage = {item.messages.length > 0 ? item.messages[item.messages.length - 1].content : 'Nuevo chat'}/>
                       <Divider variant="inset" component="li" />
                     </div>
                   )

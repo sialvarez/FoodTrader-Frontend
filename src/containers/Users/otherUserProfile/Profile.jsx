@@ -77,6 +77,7 @@ class otherProfile extends Component {
       otherUser: props.location.state.otherUser,
       user: props.user,
       redirectReview: false,
+      redirectChat: false,
       redirectHome: false,
       open: false,
     }
@@ -84,6 +85,8 @@ class otherProfile extends Component {
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleReview = this.handleReview.bind(this);
+    this.handleChat = this.handleChat.bind(this);
+    this.createChat = this.createChat.bind(this);
   }
 
   componentDidMount() {
@@ -101,8 +104,35 @@ class otherProfile extends Component {
   };
 
   handleReview() {
+    
     this.setState({redirectReview: true});
   };
+
+  handleChat() {
+    this.createChat();
+    this.setState({redirectChat: true});
+  };
+
+  createChat() {
+    const { otherUser } = this.state;
+    const { token} = this.props.user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
+    const final_token = 'Bearer ' + token;
+    const data = {'userId': otherUser.id};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+  }
   
 
   getUserPublications() {
@@ -132,6 +162,8 @@ class otherProfile extends Component {
       return <Redirect to='/login' />
     } else if (Object.keys(otherUser).length === 0 ){
         return <Redirect to='/home' />
+    } else if (this.state.redirectChat) {
+      return <Redirect to = '/chat' />    
     } else if (this.state.redirectReview) {
       return <Redirect to = {{pathname: '/newReview',
       state: {user: this.state.user}
@@ -209,7 +241,7 @@ class otherProfile extends Component {
 
                 <Grid item sm = {6}>
 
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    <Button onClick = {this.handleChat} variant="contained" color="primary" className={classes.button}>
                       Contactar vendedor
                       <Email className={classes.rightIcon} />
                     </Button>

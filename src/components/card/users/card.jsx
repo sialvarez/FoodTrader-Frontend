@@ -70,9 +70,15 @@ const styles = theme => ({
             anchorEl: null,
             redirectProfile: false,
             redirectReview: false,
+            customClick: props.customClick,
 
         }
+
     }
+
+    
+    
+  
 
     handleChildClick = (e) => {
         e.stopPropagation();
@@ -91,6 +97,8 @@ const styles = theme => ({
           this.setState({ redirectProfile: true });
         } else if (action === 'review'){
           this.setState({ redirectReview: true });
+        } else if (action === 'message') {
+          this.state.customClick(this.state.user.id);
         }
       };
    
@@ -130,6 +138,7 @@ const styles = theme => ({
                     >
                         <MenuItem onClick={event => this.handleMenuItemSelection(event, 'profile' )}>Perfil</MenuItem>
                         <MenuItem onClick={event => this.handleMenuItemSelection(event, 'review')}>Nueva review</MenuItem>
+                        <MenuItem onClick = {event => this.handleMenuItemSelection(event, 'message')}>Enviar mensaje</MenuItem>
                     </Menu>
             </div>  
             <Avatar alt="avatar" src={avatar} className={classes.avatar} />

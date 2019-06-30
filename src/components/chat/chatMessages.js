@@ -18,6 +18,10 @@ import './chatMessages.css';
 const styles = theme => ({
   container: {
     margin: '20px',
+    height: 400,
+    maxHeight: 400,
+    overflow: 'auto',
+
   },
   avatar: {
     margin: 'auto',
@@ -73,12 +77,17 @@ class Chat extends React.Component {
       messages: [],
       currentId: 100,
       lastId: '',
+      
     };
     this.send = this.send.bind(this);
     this.nextId = this.nextId.bind(this);
     this.onMessage = this.onMessage.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
     props.newMessage.onMessage(this.onMessage);
+    this.messagesEndRef = React.createRef();
   }
+
+  
 
   componentDidUpdate(prevProps) {
     if (prevProps.chatId !== this.props.chatId) {
@@ -86,6 +95,12 @@ class Chat extends React.Component {
       this.getChatHistory();
     }
   }
+
+  scrollToBottom() {
+    this.messagesEndRef.scrollIntoView({ behavior: "smooth" });
+  }
+  
+ 
 
   onMessage(payload) {
     console.log('Message received. ', payload);
@@ -114,7 +129,10 @@ class Chat extends React.Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({ messages: data.messages }))
+    .then(data => {
+      this.setState({ messages: data.messages });
+      this.scrollToBottom();
+    })
   }
 
   nextId() {
@@ -149,6 +167,7 @@ class Chat extends React.Component {
           text: '',
           messages: messages.concat([{ content: text, userId: id, id: this.nextId()}]),
         });
+        this.scrollToBottom();
       }
     })
   }
@@ -178,6 +197,10 @@ class Chat extends React.Component {
               isMine={parseInt(item.userId) === parseInt(user.id)}
             />
           )}
+
+          <div style={{ float:"left", clear: "both" }}
+             ref={(el) => { this.messagesEndRef = el; }}></div>
+      
         </div>
 
         <div className={classes.header}>

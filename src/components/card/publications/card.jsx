@@ -63,6 +63,8 @@ class PublicationCard extends React.Component {
       id: props.id,
       token: props.token,
       user: props.user,
+      username: props.user.username,
+      id_user: props.user.id,
       actualUser: props.actualUser,
       place: props.place,
       anchorEl: null,
@@ -76,15 +78,21 @@ class PublicationCard extends React.Component {
 
   handleOnClick = () => {
     const { handleModal, handleShowedPublication } = this.props;
-    const { title, date, image, content, user, place } = this.state;
+    const { title, date, image, content, username, place, id_user, user } = this.state;
+    const titleModal = title + ' - ' + username;
+    const subheader = place + ' - ' + date.slice(0,11);
     handleModal(true);
     handleShowedPublication({
       title,
+      titleModal,
       date,
       image,
       content,
-      user,
+      username,
       place,
+      id_user,
+      subheader,
+      user,
     });
   }
 
@@ -144,7 +152,7 @@ class PublicationCard extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const subheader = this.state.user + "   " + this.state.date.slice(0,10);
+    const subheader = this.state.user.username + "   " + this.state.date.slice(0,10);
     const { anchorEl, redirectEditPublication, redirectHome } = this.state;
     
     if(redirectEditPublication){
@@ -157,7 +165,7 @@ class PublicationCard extends React.Component {
       <div>
       <Card className={classes.card} onClick={this.handleOnClick}>
         <CardHeader
-          action={ (this.state.user === this.state.actualUser) && 
+          action={ (this.state.user.username === this.state.actualUser) && 
             <div>
               <IconButton
                 onClick = {this.handleChildClick}

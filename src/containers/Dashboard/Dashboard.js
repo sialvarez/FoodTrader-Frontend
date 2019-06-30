@@ -1,13 +1,19 @@
+
 import React, { Component } from 'react';
 import './Dashboard.css';
 import Navbar from '../../components/navbar/navbar.js';
 import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
 import PublicationCard from '../../components/card/publications/card.jsx';
+import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import CardHeader from '@material-ui/core/CardHeader';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
-import Email from '@material-ui/icons/Email';
+
+import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {
@@ -19,6 +25,7 @@ import {
 import { Redirect } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/messaging';
+import { green } from '@material-ui/core/colors';
 
 const styles = theme => ({
   root: {
@@ -28,6 +35,13 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 4,
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
+  margin: {
+    primary: green,
   },
   paper: {
     position: 'absolute',
@@ -83,8 +97,49 @@ class Dashboard extends Component {
     this.state = {
       user: props.user,
       publications: [],
+      redirectChat: false,
+      redirectProfile: false,
+      redirectProfileUser: {},
     };
     this.getPublications = this.getPublications.bind(this);
+    this.handleChat = this.handleChat.bind(this);
+    this.createChat = this.createChat.bind(this);
+    this.handleProfile = this.handleProfile.bind(this);
+  }
+
+  handleChat(event, id) {
+    this.props.handlePublicationModal(false);
+    this.createChat(id);
+    this.setState({redirectChat: true});
+  };
+
+  handleProfile(event, user) {
+    this.props.handlePublicationModal(false);
+    this.setState({redirectProfile: true, redirectProfileUser: user});
+  }
+
+  createChat(id) {
+    console.log("Creando chat de")
+    console.log(this.state.user.id);
+    console.log("Con")
+    console.log(id)
+    const { token} = this.props.user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
+    const final_token = 'Bearer ' + token;
+    const data = {'userId': id};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
   }
 
   async getPublications() {
@@ -147,9 +202,18 @@ class Dashboard extends Component {
       showedPublication,
       showedPublicationAction,
     } = this.props;
+    const {redirectChat, redirectProfile, redirectProfileUser} = this.state;
     if (Object.keys(user).length === 0) {
       return <Redirect to="/" />;
+    } else if (redirectChat){
+      return <Redirect to='/chat' />
+    } else if (redirectProfile) {
+      return  <Redirect to = {{
+        pathname: '/userProfile',
+        state: {otherUser: redirectProfileUser}
+      }} />
     }
+
     requestPermission().then(arr => {
       const messaging = arr[0];
       const token = arr[1];
@@ -175,7 +239,7 @@ class Dashboard extends Component {
                     image={item.publication.image}
                     id={item.publication.id}
                     place={item.publication.place}
-                    user={item.user.username}
+                    user={item.user}
                     handleModal={handlePublicationModal}
                     handleShowedPublication={showedPublicationAction}
                     token={user.token}
@@ -197,19 +261,38 @@ class Dashboard extends Component {
           }}
         >
           <div style={getModalStyle()} className={classes.paper}>
-            <Typography variant="h6" id="modal-title">
-              {showedPublication.title}
-            </Typography>
-            <Typography variant="subtitle1" id="simple-modal-description">
-              {showedPublication.content}
-            </Typography>
-            <Typography variant="subtitle1" id="simple-modal-description">
-              {showedPublication.place}
-            </Typography>
-            <Button variant="contained" color="primary">
-              <Email className={classes.leftIcon} />
-              Contactar usuario
-            </Button>
+              <CardHeader
+              title = {showedPublication.titleModal}
+              subheader = {showedPublication.subheader}
+            />
+            <CardMedia
+            className={classes.media}
+            image={showedPublication.image}
+          />
+            <CardContent>
+              <Typography component="p">
+                {showedPublication.content}
+              </Typography>
+            </CardContent>
+
+            {user.id === showedPublication.id_user ? (
+              <div>
+            </div>
+              
+            ) : (
+            <div>
+            <Button onClick = {(event) => this.handleProfile(event, showedPublication.user)} variant="contained" className="button-home">
+            <AccountCircle  className={classes.leftIcon} />
+            Visitar perfil
+          </Button>
+         
+          <Button onClick = {(event) => this.handleChat(event, showedPublication.id_user)} variant="contained" color="primary">
+            <ChatBubbleOutline  className={classes.leftIcon} />
+            Contactar usuario
+          </Button>
+          </div>
+            )}
+            
           </div>
         </Modal>
       </div>

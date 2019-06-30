@@ -47,10 +47,13 @@ class DisplayUsers extends Component {
       super(props);
       this.state = {
 					user: props.user,
-					users: [],
+          users: [],
+          redirectChat: false,
       }
 
   this.getUsers = this.getUsers.bind(this);
+  this.handleChat = this.handleChat.bind(this);
+  this.createChat = this.createChat.bind(this);
   }
 
   getUsers() {
@@ -78,11 +81,39 @@ class DisplayUsers extends Component {
 
   }
 
+  handleChat(id) {
+    this.createChat(id);
+    this.setState({redirectChat: true});
+  };
+
+  createChat(id) {
+    const { token} = this.props.user;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
+    const final_token = 'Bearer ' + token;
+    const data = {'userId': id};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'mode': 'no-cors',
+        'Authorization': final_token,
+      },
+      body: JSON.stringify(data),
+    }).then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+  }
+
 	render() {
-		const { classes } = this.props;
+    const { classes } = this.props;
+    const { redirectChat } = this.state;
 		if(Object.keys(this.state.user).length === 0){
       return <Redirect to='/login' />
-		}
+		} else if (redirectChat){
+      return <Redirect to='/chat' />
+    }
 		return (
 			<div className={classes.root}>
         <Navbar />
@@ -93,11 +124,11 @@ class DisplayUsers extends Component {
 						{this.state.users.map(function(item, i){
 								return(
 									<Grid item sm = {3} key = {item.id}>
-										<UserCard user = {item}/>
+										<UserCard user = {item} customClick = {this.handleChat}/>
 
 									</Grid>
 								)
-							})}
+							}, this)}
 					
 					</Grid>
 
