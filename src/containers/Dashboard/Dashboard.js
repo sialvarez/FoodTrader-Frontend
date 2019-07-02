@@ -78,8 +78,7 @@ const requestPermission = async () => {
   const messaging = firebase.messaging();
   await messaging.requestPermission();
   const token = await messaging.getToken();
-  //messaging.onMessage(payload => console.log('Message received. ', payload));
-  console.log(token);
+
   return [messaging, token];
 };
 
@@ -119,10 +118,7 @@ class Dashboard extends Component {
   }
 
   createChat(id) {
-    console.log("Creando chat de")
-    console.log(this.state.user.id);
-    console.log("Con")
-    console.log(id)
+    
     const { token} = this.props.user;
     const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/chats/';
     const final_token = 'Bearer ' + token;
@@ -137,9 +133,7 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(data),
     }).then(response => response.json())
-    .then(data => {
-      console.log(data);
-    })
+    .then(data => {})
   }
 
   async getPublications() {
@@ -190,7 +184,7 @@ class Dashboard extends Component {
       body: JSON.stringify(data),
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => {})
   }
 
   render() {

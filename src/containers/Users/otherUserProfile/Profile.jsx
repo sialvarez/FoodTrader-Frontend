@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Profile.css";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import ReviewCard from '../../../components/card/reviews/card.jsx'; 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Navbar from "../../../components/navbar/navbar.js";
@@ -10,7 +11,6 @@ import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
 import avatar from '../../../assets/img/avatar.jpg'
 import Typography from '@material-ui/core/Typography';
-import MyCard from '../../../components/card/reviews/card.jsx';
 import PublicationCard from '../../../components/card/publications/card.jsx';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
@@ -71,8 +71,10 @@ class otherProfile extends Component {
 
   constructor(props){
     super(props);
+
     this.state = {
       publications : [],
+      reviews: [],
       data: ['item 1', 'item 1', 'item 1', 'item 1'],
       otherUser: props.location.state.otherUser,
       user: props.user,
@@ -82,6 +84,7 @@ class otherProfile extends Component {
       open: false,
     }
     this.getUserPublications = this.getUserPublications.bind(this);
+    this.getUserReviews = this.getUserReviews.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleReview = this.handleReview.bind(this);
@@ -92,6 +95,7 @@ class otherProfile extends Component {
   componentDidMount() {
     if(!(Object.keys(this.state.user).length === 0)){
       this.getUserPublications();
+      this.getUserReviews();
     }
   }
 
@@ -129,9 +133,7 @@ class otherProfile extends Component {
       },
       body: JSON.stringify(data),
     }).then(response => response.json())
-    .then(data => {
-      console.log(data);
-    })
+    .then(data => {})
   }
   
 
@@ -154,9 +156,31 @@ class otherProfile extends Component {
       this.setState({publications: data.publications})})
   }
 
+  getUserReviews() {
+    const user_id = this.state.otherUser.id;
+    const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/users/' + user_id + '/reviews';
+    const {token} = this.state.user;
+    const final_token = 'Bearer ' + token;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'mode': 'no-cors',
+          'Authorization': final_token,
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+     
+      this.setState({reviews: data.reviews})})
+  }
+
+
   render() {
     const { user } = this.props;
     const { otherUser } = this.state;
+
 
     if(Object.keys(user).length === 0){
       return <Redirect to='/login' />
@@ -166,7 +190,7 @@ class otherProfile extends Component {
       return <Redirect to = '/chat' />    
     } else if (this.state.redirectReview) {
       return <Redirect to = {{pathname: '/newReview',
-      state: {user: this.state.user}
+      state: {user: this.state.user, otherUser : otherUser}
 
     }} />
     }
@@ -257,16 +281,22 @@ class otherProfile extends Component {
                 <Grid container>
 
 
-                {this.state.data.map(function(item, i){
-                    return(
-                      <Grid item sm = {3} key = {i}>
-                        <MyCard item = {item} />
-                      </Grid>
-                    )
-                  })}
-                  
+                  {this.state.reviews.map(function(item, i){
+                      return(
+                        <Grid item sm = {3} key = {i}>
+                          <ReviewCard 
+                          creatorName = {item.userCreatorId}
+                          userId= {item.userId}
+                          value= {item.value}
+                          content= {item.content}
+                          date= {item.createdAt}
+                          />
+                        </Grid>
+                      )
+                    })}
+                    
 
-                </Grid>
+                  </Grid>
 
                 <Typography className = "title-name" variant = "h3">
                   Publicaciones

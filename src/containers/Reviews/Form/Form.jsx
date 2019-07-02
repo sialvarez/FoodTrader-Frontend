@@ -75,15 +75,15 @@ class FormReviews extends Component {
 
     }
 
-    async postReview(){
-      console.log(this.state);
+    postReview(){
+   
       const {token} = this.state.user;
       
       const final_token = 'Bearer ' + token;
       const url = 'http://ec2-18-216-51-1.us-east-2.compute.amazonaws.com/reviews';
       const data = {'content': this.state.content, 'value': this.state.value,
        'userId': this.state.otherUser.id, 'userCreatorId': this.state.user.id};
-      console.log(data);
+     
        fetch(url, {
         method: 'POST',
         headers: {
@@ -95,7 +95,7 @@ class FormReviews extends Component {
         body: JSON.stringify(data)
         })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => this.setState({redirect: true}))
   }
 
     handleContentChange(e) {
@@ -103,7 +103,6 @@ class FormReviews extends Component {
     }
 
     changeRating( newRating ) {
-      console.log(newRating);
       this.setState({
         value: newRating
       })
@@ -115,12 +114,17 @@ class FormReviews extends Component {
 
 
   render() {
+    const {otherUser} = this.state;
+
     if(Object.keys(this.state.user).length === 0){
       return <Redirect to='/login' />
     }
     const { redirect } = this.state;
     if (redirect) {
-      return <Redirect to='/profile'/>;
+      return  <Redirect to = {{
+        pathname: '/userProfile',
+        state: {otherUser: otherUser}
+      }} />
     }
 
   

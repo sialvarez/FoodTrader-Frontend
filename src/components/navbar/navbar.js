@@ -137,8 +137,8 @@ class navbar extends React.Component {
 
   render() {
   
-    const { classes, searchInput } = this.props;
-    const { redirectToChat, redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, logout, redirectToSearchResultState } = this.state;
+    const { classes } = this.props;
+    const { redirectToChat, redirectToProfile, redirectToHome, redirectToNewPublication, redirectToUsers, redirectToLogout, redirectToSearchResultState } = this.state;
     if (redirectToProfile) {
       return <Redirect to='/profile'/>;
     } else if (redirectToNewPublication) {

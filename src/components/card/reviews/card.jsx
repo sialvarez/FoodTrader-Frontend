@@ -73,7 +73,7 @@ class ReviewCard extends React.Component {
           <IconButton  className = "icon-star" >
             {this.state.stars.map(function(item, i){
                     return(
-                      <StarRounded/>
+                      <StarRounded key = {i}/>
                     )
                   })}
             

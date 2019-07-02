@@ -167,7 +167,7 @@ class UserProfile extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+     
       this.setState({reviews: data.reviews})})
   }
 

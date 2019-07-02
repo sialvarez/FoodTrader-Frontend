@@ -103,7 +103,7 @@ class Chat extends React.Component {
  
 
   onMessage(payload) {
-    console.log('Message received. ', payload);
+    
     const chatId = parseInt(payload.data.chatId, 10);
     if (chatId === parseInt(this.props.chatId, 10) && this.state.lastId !== payload.data.messageId) {
       this.setState({ lastId: payload.data.messageId });

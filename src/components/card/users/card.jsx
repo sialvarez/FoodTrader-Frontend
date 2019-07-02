@@ -148,7 +148,7 @@ const styles = theme => ({
                 </Typography>
 
 
-                <Grid container spacing = {6}>
+                <Grid container spacing = {8}>
                     <Grid item sm = {6}>
                       <Typography className = "title-name" variant = "h6">
                         Comuna
