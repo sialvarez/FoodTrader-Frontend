@@ -268,18 +268,21 @@ class UserProfile extends Component {
             </Grid>
             <Grid item sm={9}>
               <Paper className={classes.paper}>
-                <Typography className = "title-name" variant = "h3">
+              {this.state.reviews.length !== 0 && (
+                <Typography variant = "h4" align="center" gutterBottom>
                   Reviews
                 </Typography>
+              )}
 
                 <Grid container>
 
 
                 {this.state.reviews.map(function(item, i){
+                  console.log(item);
                     return(
                       <Grid item sm = {3} key = {i}>
                         <ReviewCard 
-                        creatorName = {item.userCreatorId}
+                        creatorName = {item.userCreator.name}
                         userId= {item.userId}
                         value= {item.value}
                         content= {item.content}
@@ -292,7 +295,7 @@ class UserProfile extends Component {
 
                 </Grid>
 
-                <Typography className = "title-name" variant = "h3">
+                <Typography variant = "h4" align="center" gutterBottom>
                   Publicaciones
                 </Typography>
 
