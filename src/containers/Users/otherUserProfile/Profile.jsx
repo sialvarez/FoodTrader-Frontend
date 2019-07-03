@@ -228,7 +228,7 @@ class otherProfile extends Component {
                       <Typography className = "title-name" variant = "h6">
                         Correo
                       </Typography>
-                      <p>{otherUser.email}</p>
+                      <p style={{fontSize: 13}}>{otherUser.email}</p>
                     
                     </Grid>
 
@@ -274,9 +274,11 @@ class otherProfile extends Component {
             </Grid>
             <Grid item sm={9}>
               <Paper className={classes.paper}>
-                <Typography className = "title-name" variant = "h3">
-                  Reviews
-                </Typography>
+                {this.state.reviews.length !== 0 && (
+                  <Typography variant = "h4" align="center" gutterBottom>
+                    Reviews
+                  </Typography>
+                )}
 
                 <Grid container>
 
@@ -285,7 +287,7 @@ class otherProfile extends Component {
                       return(
                         <Grid item sm = {3} key = {i}>
                           <ReviewCard 
-                          creatorName = {item.userCreatorId}
+                          creatorName = {item.userCreator.name}
                           userId= {item.userId}
                           value= {item.value}
                           content= {item.content}
@@ -298,7 +300,7 @@ class otherProfile extends Component {
 
                   </Grid>
 
-                <Typography className = "title-name" variant = "h3">
+                <Typography variant = "h4" align="center" gutterBottom>
                   Publicaciones
                 </Typography>
 
@@ -308,12 +310,13 @@ class otherProfile extends Component {
                     return(
                       <Grid item sm = {3} key = {i}>
                         <PublicationCard
-                          content = {item.content} title = {item.title} 
+                          content = {item.content}
+                          title = {item.title} 
                           date = {item.createdAt} 
                           image = {item.image}
                           id = {item.id}
                           place = {item.place}
-                          user = {otherUser.username}
+                          user = {otherUser}
                           handleModal = {handlePublicationModal}
                           handleShowedPublication = {showedPublicationAction}
                           token = {user.token}
