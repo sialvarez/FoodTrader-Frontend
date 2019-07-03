@@ -278,7 +278,6 @@ class UserProfile extends Component {
 
 
                 {this.state.reviews.map(function(item, i){
-                  console.log(item);
                     return(
                       <Grid item sm = {3} key = {i}>
                         <ReviewCard 
@@ -305,12 +304,13 @@ class UserProfile extends Component {
                     return(
                       <Grid item sm = {3} key = {i}>
                         <PublicationCard
-                          content = {item.content} title = {item.title} 
+                          content = {item.content}
+                          title = {item.title} 
                           date = {item.createdAt} 
                           image = {item.image}
                           id = {item.id}
                           place = {item.place}
-                          user = {user.username}
+                          user = {user}
                           handleModal = {handlePublicationModal}
                           handleShowedPublication = {showedPublicationAction}
                           token = {user.token}
